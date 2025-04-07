@@ -7,7 +7,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import baseModal from './components/common/baseModal.vue' // 경로는 네 폴더구조에 맞게
+import baseModal from './components/common/baseModal.vue' 
 
 const isModalOpen = ref(false)
 
