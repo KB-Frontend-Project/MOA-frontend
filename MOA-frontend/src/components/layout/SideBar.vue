@@ -67,28 +67,28 @@ console.log(path)
 
 <style scoped>
 .sidebar {
-  width: 17.5rem;
-  height: 100%;
-  border-right: 2px solid #55b4a199;
+  width: 14.5rem;
+  height: inherit;
 }
 .sidebar-profile {
-  width: 6rem;
-  height: 6rem;
+  width: 5rem;
+  height: 5rem;
   background-color: rgb(194, 194, 194);
   border-radius: 50%;
-  margin: 2rem auto;
+  margin: 1.6rem auto;
 }
 .sidebar-profile-hello {
   text-align: center;
   font-size: 1.6rem;
 }
 .sidebar-content {
-  padding: 1.3rem 2.2rem;
+  padding: 1rem 1.6rem;
   border-bottom: 2px solid #55b4a199;
+  border-right: 2px solid #55b4a199;
 }
 .sidebar-title {
   font-weight: bold;
-  font-size: 1.33rem;
+  font-size: 1.2rem;
 }
 .sidebar-sublist {
   display: flex;
@@ -96,6 +96,7 @@ console.log(path)
   gap: 0.625rem;
   padding-top: 1rem;
   color: gray;
+  font-size: 0.85rem;
 }
 .last-item {
   padding-top: 0;
