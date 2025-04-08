@@ -19,12 +19,14 @@ const { handleDateClick, handleEventClick, handleDateSet } = props
 const calendarOptions = ref({
   plugins: [dayGridPlugin, interactionPlugin],
   initialView: 'dayGridMonth',
+  contentHeight: '28rem',
   locale: 'ko',
   headerToolbar: {
     left: 'prev,next today',
     center: 'title',
     right: 'dayGridMonth,dayGridWeek,dayGridDay',
   },
+  dayMaxEvents: 2,
   datesSet: handleDateSet,
   events: events,
   eventClick: handleEventClick,
