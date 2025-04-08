@@ -2,24 +2,52 @@
   <div>
     <h1>LineChart</h1>
     <LineChart :chartData="data1" :chartOptions="options1" />
-    <h1>BarChart</h1>
+    <!-- <h1>BarChart</h1>
     <BarChart :chartData="data2" :chartOptions="options2" />
     <h1>PieChart</h1>
-    <PieChart :chartData="data3" :chartOptions="options3" />
+    <PieChart :chartData="data3" :chartOptions="options3" /> -->
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import LineChart from '@/components/statistics/LineGraph.vue'
 import BarChart from '@/components/statistics/BarChart.vue'
 import PieChart from '@/components/statistics/PieChart.vue'
+import axios from 'axios'
+import { useMoaStore } from '@/stores/moaStore'
+
+const BASEURI = '/api/entries'
+const states = reactive({ entrieList: [] })
+
+const moaStore = useMoaStore()
+const { getMonthlySpending } = moaStore
+
+const fetchEntrieList = async () => {
+  try {
+    const response = await axios.get(BASEURI)
+    if (response.status === 200) {
+      states.entrieList = response.data
+    } else {
+      alert('데이터 조회 실패')
+    }
+  } catch (error) {
+    console.log('에러발생 :' + error)
+  }
+}
+
+onMounted(async () => {
+  await fetchEntrieList()
+  const monthlySpending = getMonthlySpending(states.entrieList)
+  //const monthList = Object.keys(monthlySpending) // {'3', '4'}
+  // console.log(Object.keys(monthlySpending))
+})
 
 const data1 = ref({
-  labels: ['1월', '2월', '3월', '4월', '5월'],
+  labels: [],
   datasets: [
     {
-      label: '매출',
+      label: '지출',
       backgroundColor: 'rgba(75, 192, 192, 0.2)',
       borderColor: 'rgba(75, 192, 192, 1)',
       borderWidth: 2,
@@ -36,7 +64,7 @@ const options1 = ref({
     },
     title: {
       display: true,
-      text: '월별 매출 추이',
+      text: '월별 소비 추이',
     },
   },
 })
@@ -62,7 +90,7 @@ const options2 = ref({
     },
     title: {
       display: true,
-      text: '월별 매출 막대 그래프',
+      text: '월별 소비 막대 그래프',
     },
   },
 })
