@@ -2,13 +2,13 @@
   <SideBar />
   <div>
     <button @click="toggleModal">모달 열기</button>
-    <baseModal :isModal="isModalOpen" @close="toggleModal" />
+    <BaseModal :isModal="isModalOpen" @close="toggleModal" />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import baseModal from './components/common/BaseModal.vue'
+import BaseModal from './components/common/BaseModal.vue'
 import SideBar from './components/layout/SideBar.vue'
 
 const isModalOpen = ref(false)
