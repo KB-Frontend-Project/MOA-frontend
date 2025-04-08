@@ -1,13 +1,6 @@
-<!-- <template>
-  <SideBar />
-  <div>
-    <button @click="toggleModal">모달 열기</button>
-    <BaseModal :isModal="isModalOpen" @close="toggleModal" />
-  </div>
-</template> -->
-
 <template>
   <Header />
+  <!-- 메인 화면 layout 구조 구성 -->
   <div class="layout">
     <SideBar />
     <router-view class="router-view" />
