@@ -1,0 +1,142 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "홍길동",
+      "username": "hong",
+      "password": "password123",
+      "image": "profile1.jpg",
+      "createdAt": "2023-01-15",
+      "alert": true,
+      "shake_unit": 5,
+      "balance": 500000
+    },
+    {
+      "id": 2,
+      "name": "김철수",
+      "username": "kim",
+      "password": "secure456",
+      "image": "profile2.jpg",
+      "createdAt": "2023-02-20",
+      "alert": false,
+      "shake_unit": 10,
+      "balance": 750000
+    }
+  ],
+  "ledgers": [
+    {
+      "id": 1,
+      "name": "일상 가계부",
+      "createdAt": "2023-01-20",
+      "lastEditAt": "2023-04-05",
+      "isShare": false,
+      "desc": "일상 생활비 관리용 가계부"
+    },
+    {
+      "id": 2,
+      "name": "여행 경비",
+      "createdAt": "2023-03-10",
+      "lastEditAt": "2023-03-25",
+      "isShare": true,
+      "desc": "제주도 여행 경비 관리"
+    },
+    {
+      "id": 3,
+      "name": "식비 관리",
+      "createdAt": "2023-02-05",
+      "lastEditAt": "2023-04-01",
+      "isShare": true,
+      "desc": "월별 식비 관리 가계부"
+    }
+  ],
+  "user_ledgers": [
+    {
+      "id": 1,
+      "userId": 1,
+      "ledgerId": 1
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "ledgerId": 2
+    },
+    {
+      "id": 3,
+      "userId": 2,
+      "ledgerId": 2
+    },
+    {
+      "id": 4,
+      "userId": 2,
+      "ledgerId": 3
+    }
+  ],
+  "entries": [
+    {
+      "id": 1,
+      "ledgerId": 1,
+      "isWithDraw": true,
+      "when": "2023-04-01",
+      "where": "이마트",
+      "category": "식품",
+      "amount": 55000,
+      "desc": "주간 식품 구매",
+      "author": "hong"
+    },
+    {
+      "id": 2,
+      "ledgerId": 1,
+      "isWithDraw": true,
+      "when": "2023-04-02",
+      "where": "카페",
+      "category": "음료",
+      "amount": 5000,
+      "desc": "아메리카노",
+      "author": "hong"
+    },
+    {
+      "id": 3,
+      "ledgerId": 1,
+      "isWithDraw": false,
+      "when": "2023-04-05",
+      "where": "회사",
+      "category": "급여",
+      "amount": 2000000,
+      "desc": "4월 급여",
+      "author": "hong"
+    },
+    {
+      "id": 4,
+      "ledgerId": 2,
+      "isWithDraw": true,
+      "when": "2023-03-15",
+      "where": "제주항공",
+      "category": "교통",
+      "amount": 120000,
+      "desc": "제주도 왕복 항공권",
+      "author": "hong"
+    },
+    {
+      "id": 5,
+      "ledgerId": 2,
+      "isWithDraw": true,
+      "when": "2023-03-16",
+      "where": "제주 호텔",
+      "category": "숙박",
+      "amount": 150000,
+      "desc": "3박 4일 숙박비",
+      "author": "kim"
+    },
+    {
+      "id": 6,
+      "ledgerId": 3,
+      "isWithDraw": true,
+      "when": "2023-04-01",
+      "where": "맛있는 식당",
+      "category": "외식",
+      "amount": 35000,
+      "desc": "저녁 식사",
+      "author": "kim"
+    }
+  ]
+}
