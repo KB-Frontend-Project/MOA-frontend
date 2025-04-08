@@ -1,15 +1,14 @@
 <template>
-  <SideBar />
-  <div>
-    <button @click="toggleModal">모달 열기</button>
-    <baseModal :isModal="isModalOpen" @close="toggleModal" />
-  </div>
+  <router-view />
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import baseModal from './components/common/BaseModal.vue'
 import SideBar from './components/layout/SideBar.vue'
+import Header from './components/layout/Header.vue'
+import SignUpPage from './pages/SignUpPage.vue'
+
 
 const isModalOpen = ref(false)
 
