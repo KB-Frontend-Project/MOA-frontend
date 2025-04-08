@@ -1,14 +1,28 @@
 <template>
-  <button v-if="isActive" type="button" class="btn" :class="typeClass + ' ' + _mp" :style="styles">
+  <button
+    v-if="isActive"
+    type="button"
+    class="btn"
+    :class="typeClass + ' ' + _mp"
+    :style="styles"
+    @click="$emit('click')"
+  >
     {{ _text }}
   </button>
-  <button v-else disabled type="button" class="btn" :class="_mp" :style="styles">
+  <button
+    v-else
+    disabled
+    type="button"
+    class="btn"
+    :class="_mp"
+    :style="styles"
+  >
     {{ _text }}
   </button>
 </template>
 
 <script setup>
-import { ref, reactive, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 
 const props = defineProps({
   _isActive: { type: String, required: true },
@@ -19,6 +33,8 @@ const props = defineProps({
   _type: { type: String, required: true },
   _mp: { type: String, required: false },
 })
+
+const emit = defineEmits(['click'])
 
 const isActive = ref(true)
 const styles = ref('')
@@ -60,26 +76,17 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-
   text-decoration: none;
   text-align: center;
-
   padding: 0;
-
+  margin: 0 1rem;
   border: none;
 }
+
+
 button[disabled] {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
   background-color: ghostwhite;
-  text-decoration: none;
-  text-align: center;
-
-  padding: 0;
   margin: 0;
-
   border: solid gray 0.001rem;
 }
 

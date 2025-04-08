@@ -1,9 +1,9 @@
 {
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "name": "홍길동",
-      "username": "hong",
+      "email": "hong",
       "password": "password123",
       "image": "profile1.jpg",
       "createdAt": "2023-01-15",
@@ -12,20 +12,52 @@
       "balance": 500000
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "김철수",
-      "username": "kim",
+      "email": "kim",
       "password": "secure456",
       "image": "profile2.jpg",
       "createdAt": "2023-02-20",
       "alert": false,
       "shake_unit": 10,
       "balance": 750000
+    },
+    {
+      "id": "897a",
+      "email": "ksw@gmail.com",
+      "password": "123123",
+      "image": "default.jpg",
+      "createdAt": "2025-04-08",
+      "alert": true,
+      "shake_unit": 5,
+      "balance": 0
+    },
+    {
+      "id": "64c2",
+      "name": "",
+      "email": "kkk1231213@gmail.com",
+      "password": "123123",
+      "image": "default.jpg",
+      "createdAt": "2025-04-08",
+      "alert": true,
+      "shake_unit": 5,
+      "balance": 0
+    },
+    {
+      "id": "de38",
+      "name": "",
+      "email": "ss4",
+      "password": "12",
+      "image": "default.jpg",
+      "createdAt": "2025-04-08",
+      "alert": true,
+      "shake_unit": 5,
+      "balance": 0
     }
   ],
   "ledgers": [
     {
-      "id": 1,
+      "id": "1",
       "name": "일상 가계부",
       "createdAt": "2023-01-20",
       "lastEditAt": "2023-04-05",
@@ -33,7 +65,7 @@
       "desc": "일상 생활비 관리용 가계부"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "여행 경비",
       "createdAt": "2023-03-10",
       "lastEditAt": "2023-03-25",
@@ -41,7 +73,7 @@
       "desc": "제주도 여행 경비 관리"
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "식비 관리",
       "createdAt": "2023-02-05",
       "lastEditAt": "2023-04-01",
@@ -51,29 +83,29 @@
   ],
   "user_ledgers": [
     {
-      "id": 1,
+      "id": "1",
       "userId": 1,
       "ledgerId": 1
     },
     {
-      "id": 2,
+      "id": "2",
       "userId": 1,
       "ledgerId": 2
     },
     {
-      "id": 3,
+      "id": "3",
       "userId": 2,
       "ledgerId": 2
     },
     {
-      "id": 4,
+      "id": "4",
       "userId": 2,
       "ledgerId": 3
     }
   ],
   "entries": [
     {
-      "id": 1,
+      "id": "1",
       "ledgerId": 1,
       "isWithDraw": true,
       "when": "2023-04-01",
@@ -84,7 +116,7 @@
       "author": "hong"
     },
     {
-      "id": 2,
+      "id": "2",
       "ledgerId": 1,
       "isWithDraw": true,
       "when": "2023-04-02",
@@ -95,7 +127,7 @@
       "author": "hong"
     },
     {
-      "id": 3,
+      "id": "3",
       "ledgerId": 1,
       "isWithDraw": false,
       "when": "2023-04-05",
@@ -106,7 +138,7 @@
       "author": "hong"
     },
     {
-      "id": 4,
+      "id": "4",
       "ledgerId": 2,
       "isWithDraw": true,
       "when": "2023-03-15",
@@ -117,7 +149,7 @@
       "author": "hong"
     },
     {
-      "id": 5,
+      "id": "5",
       "ledgerId": 2,
       "isWithDraw": true,
       "when": "2023-03-16",
@@ -128,7 +160,7 @@
       "author": "kim"
     },
     {
-      "id": 6,
+      "id": "6",
       "ledgerId": 3,
       "isWithDraw": true,
       "when": "2023-04-01",
