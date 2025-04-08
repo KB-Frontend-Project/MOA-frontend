@@ -25,6 +25,7 @@ const toggleModal = () => {
 <style scoped>
 .layout {
   display: flex;
+  height: 95vh;
 }
 .router-view {
   flex: 1;
