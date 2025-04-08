@@ -14,7 +14,6 @@ import SideBar from './components/layout/SideBar.vue'
 import Header from './components/layout/Header.vue'
 import SignUpPage from './pages/SignUpPage.vue'
 
-
 const isModalOpen = ref(false)
 
 const toggleModal = () => {
