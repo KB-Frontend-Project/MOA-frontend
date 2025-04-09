@@ -110,7 +110,7 @@
       "isWithDraw": true,
       "when": "2023-04-01",
       "where": "이마트",
-      "category": "식품",
+      "category": "식비",
       "amount": 55000,
       "desc": "주간 식품 구매",
       "author": "hong"
@@ -121,7 +121,7 @@
       "isWithDraw": true,
       "when": "2023-04-02",
       "where": "카페",
-      "category": "음료",
+      "category": "식비",
       "amount": 5000,
       "desc": "아메리카노",
       "author": "hong"
@@ -154,7 +154,7 @@
       "isWithDraw": true,
       "when": "2023-03-16",
       "where": "제주 호텔",
-      "category": "숙박",
+      "category": "문화",
       "amount": 150000,
       "desc": "3박 4일 숙박비",
       "author": "kim"
@@ -165,7 +165,7 @@
       "isWithDraw": true,
       "when": "2023-04-01",
       "where": "맛있는 식당",
-      "category": "외식",
+      "category": "식비",
       "amount": 35000,
       "desc": "저녁 식사",
       "author": "kim"

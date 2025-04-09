@@ -23,9 +23,11 @@ const toggleModal = () => {
 <style scoped>
 .layout {
   display: flex;
+  height: 90vh;
 }
 .router-view {
   flex: 1;
   padding: 0.6rem;
+  height: inherit;
 }
 </style>

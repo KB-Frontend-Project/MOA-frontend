@@ -1,21 +1,21 @@
 <template>
-  <div class="row">
-    <div class="col-12 calendar-month-container">
+  <div class="calendar-page-container">
+    <div class="calendar-month-container">
       <div class="calendar-month-block" style="color: #f04747">
         <div class="calendar-month-title">이번 달 지출</div>
-        {{ entriesTotalMonthSpend.toLocaleString() }}원
+        <div>{{ entriesTotalMonthSpend.toLocaleString() }}원</div>
       </div>
       <div class="calendar-month-block" style="color: #43b581">
         <div class="calendar-month-title">이번 달 수입</div>
-        {{ entriesTotalMonthIncome.toLocaleString() }}원
+        <div>{{ entriesTotalMonthIncome.toLocaleString() }}원</div>
       </div>
 
       <div class="calendar-month-block">
         <div class="calendar-month-title">예산</div>
-        {{ 1 }}억원
+        <div>{{ 1 }}억원</div>
       </div>
     </div>
-    <div class="col-8">
+    <div class="calendar-app-container">
       <BaseCalendar
         class="base-calendar"
         :handleDateClick="handleDateClick"
@@ -24,9 +24,10 @@
         :events="events"
       />
     </div>
-    <div class="col-4">
+    <div class="calendar-detail-container">
+      <div class="detail-logo"></div>
       <div class="event-details">
-        <div v-if="selectedEvents.length === 0" style="text-align: center">내역이 없습니다</div>
+        <div v-if="selectedEvents.length === 0" class="no-detail-text">내역이 없습니다</div>
         <div v-for="select in selectedEvents" class="event-detail-item">
           <h3>{{ select.title }}</h3>
           <div class="event-detail-inline" v-if="select.start">
@@ -205,42 +206,60 @@ scaleEntriesToEvents()
 </script>
 
 <style scoped>
+.calendar-page-container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 10vh 75vh;
+  gap: 1rem;
+}
 .calendar-month-container {
+  grid-column: 1 / -1; /* 첫 번째 열부터 마지막 열까지 차지 (전체 너비) */
   display: flex;
-  /* border-bottom: 1px solid #55b4a177; */
 }
 .calendar-month-block {
   flex: 1;
   font-size: 1.6rem;
   font-weight: bold;
-  margin-bottom: 1.6rem;
   border-left: 7px solid #55b4a188;
-  border-bottom: 1px solid #55b4a188;
-  border-top: 1px solid #55b4a188;
-  padding: 1.4rem 1rem;
+  /* border-bottom: 1px solid #55b4a188; */
+  /* border-top: 1px solid #55b4a188; */
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .calendar-month-title {
   font-size: 1rem;
   color: #777;
 }
 .event-details {
-  max-width: 21.875rem;
-  /* margin: 0.6rem auto; */
-  background-color: rgb(249, 249, 249);
-  border: 1px solid #ddd;
-  box-shadow: 0 0 0.625rem rgba(0, 0, 0, 0.1);
-  padding: 1rem;
+  max-height: calc(100% - 8rem);
+  padding: 0 1rem;
   font-family: 'Courier New'; /*영수증 느낌의 폰트*/
   color: #333;
   overflow-y: auto;
+}
+.detail-logo {
+  width: 7.6rem;
+  height: 7.6rem;
+  margin: 0 auto;
+  background-image: url('/src/assets/calendarPage.png');
+  background-position: center;
+  background-size: cover;
+}
+.no-detail-text {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 1rem;
+  font-size: 1.2rem;
 }
 .event-detail-item {
   padding: 0.625rem 0;
   border-bottom: 1px dashed #ccc;
 }
 
-.event-detail-item:last-child {
-  border-bottom: none;
+.event-detail-item:first-child {
+  border-top: 1px dashed #ccc;
 }
 
 .event-detail-item h3 {
@@ -264,5 +283,12 @@ scaleEntriesToEvents()
   font-weight: bold;
   font-size: 1.1em;
   margin-top: 0.6rem;
+}
+.calendar-app-container {
+  grid-column: 1 / 9; /* 첫 번째 열부터 9번째 열까지 (8/12) */
+}
+.calendar-detail-container {
+  grid-column: 9 / -1; /* 첫 번째 열부터 9번째 열까지 (8/12) */
+  border-left: 1px solid #55b4a188;
 }
 </style>
