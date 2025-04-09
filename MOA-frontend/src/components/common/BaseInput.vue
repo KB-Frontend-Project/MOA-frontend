@@ -44,7 +44,7 @@ const props = defineProps({
   _type: { type: String, required: true },
   _ph: { type: String, default: '' },
   _w: { type: String, default: '100' },
-  modelValue: String
+  modelValue: [String, Number],
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -55,8 +55,8 @@ watchEffect(() => {
   const temp = parseInt(props._w)
   styles.value = `width: ${temp}%`
 })
-</script> 
-  
+</script>
+
 <style scoped>
 input {
   margin: 1rem;
