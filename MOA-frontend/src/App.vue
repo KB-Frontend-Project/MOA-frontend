@@ -1,10 +1,7 @@
 <template>
-  <Header />
-  <!-- 메인 화면 layout 구조 구성 -->
-  <div class="layout">
-    <SideBar />
-    <router-view class="router-view" />
-  </div>
+    <div class="main-content">
+      <router-view />
+    </div>
 </template>
 
 <script setup>
@@ -13,6 +10,7 @@ import BaseModal from './components/common/BaseModal.vue'
 import SideBar from './components/layout/SideBar.vue'
 import Header from './components/layout/Header.vue'
 import SignUpPage from './pages/SignUpPage.vue'
+import ProfileSettingPage from './pages/ProfileSettingPage.vue'
 
 
 const isModalOpen = ref(false)
