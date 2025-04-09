@@ -24,7 +24,7 @@
       :isModal="showModal"
       :title="modalTitle"
       :message="modalMessage"
-      @close="showModal = false"
+      @close="handleModalClose"
     />
   </div>
 </template>
@@ -36,8 +36,10 @@ import Header from '@/components/layout/Header.vue';
 import BaseInput from '@/components/common/BaseInput.vue';
 import BaseButton from '@/components/common/BaseButton.vue';
 import BaseModal from '@/components/common/BaseModal.vue';
+import { useRouter } from 'vue-router';
 
 const store = useMoaStore()
+const router = useRouter() 
 
 // v-model용 값
 const email = ref('')
@@ -77,7 +79,7 @@ const handleSignup = async () => {
   }
 
   const success = await store.signup(user)
-
+  signupSuccess.value = success
 
   modalTitle.value = success ? '회원가입 성공' : '회원가입 실패'
   modalMessage.value = success
@@ -92,6 +94,15 @@ const handleSignup = async () => {
     name.value = ''
   }
 }
+const signupSuccess = ref(false)
+
+const handleModalClose = () => {
+  showModal.value = false
+  if (signupSuccess.value) {
+    router.push('/login')
+  }
+}
+
 </script>
 
 
