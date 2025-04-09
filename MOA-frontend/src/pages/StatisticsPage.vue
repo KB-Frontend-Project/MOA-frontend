@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>LineChart</h1>
-    <LineChart :chartData="data1" :chartOptions="options1" />
+    <LineChart :chartData="data1" :chartOptions="options1" style="width: 50rem; height: auto" />
   </div>
 </template>
 
@@ -16,12 +16,11 @@ const getMonthlySpending = computed(() => moaStore.getMonthlySpending)
 
 onMounted(async () => {
   await fetchEntrieList()
-  updateChartData() // 데이터 가져오고 나서 직접 그래프 업데이트
 })
 
 const selectMonth = reactive(['3', '4'])
 
-const data1 = ref({
+const data1 = reactive({
   labels: [],
   datasets: [
     {
@@ -47,7 +46,6 @@ const options1 = ref({
   },
 })
 
-// 🔥 monthlySpending 데이터 기반으로 차트 세팅하는 함수
 const updateChartData = () => {
   const monthlyData = getMonthlySpending.value
   if (!monthlyData) {
@@ -63,20 +61,17 @@ const updateChartData = () => {
 
   console.log('필터링된 월 데이터:', filteredData)
 
-  data1.value.labels = selectMonth
-  data1.value.datasets[0].data = filteredData.map(item => item.totalSpending)
+  data1.labels = selectMonth
+  data1.datasets[0].data = filteredData.map(item => item.totalSpending)
 }
 
-// 🔥 getMonthlySpending을 감시하다가 값이 바뀌면 updateChartData 호출
 watch(
   () => getMonthlySpending.value,
   newVal => {
-    if (newVal) {
+    if (newVal && newVal.length > 0) {
       updateChartData()
     }
-  }
+  },
+  { immediate: true }
 )
-updateChartData()
-
-// onMounted에서는 호출 안 해도 됨
 </script>
