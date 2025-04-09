@@ -1,5 +1,5 @@
 <template>
-  <Header />
+  <Header></Header>
   <!-- 메인 화면 layout 구조 구성 -->
   <div class="layout">
     <SideBar />
