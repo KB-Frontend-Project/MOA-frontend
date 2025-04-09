@@ -50,7 +50,12 @@
             />내역 추가
           </div>
         </div>
-        <BaseButton _type="fill" _text="작성 완료" class="input-submit" />
+        <BaseButton
+          _type="fill"
+          _text="작성 완료"
+          :_isActive="isDataFullfiled === 1"
+          class="input-submit"
+        />
       </form>
     </div>
   </div>
@@ -105,6 +110,7 @@ const handleSelectedLedger = id => {
 const handleLedgerInput = async () => {
   try {
     await Promise.all(inputList.value.map(data => fetchLedgerInput(data)))
+    alert('작성이 완료되었습니다!')
     resetLedgerInput()
   } catch (error) {
     console.error('promise error:', error)
@@ -138,6 +144,14 @@ const resetLedgerInput = () => {
     },
   ]
 }
+
+const isDataFullfiled = computed(() => {
+  return inputList.value.reduce(
+    (acc, cur) =>
+      acc & (cur.where.length !== 0) & (cur.category.length !== 0) & (cur.desc.length !== 0),
+    true
+  )
+})
 </script>
 
 <style scoped>
