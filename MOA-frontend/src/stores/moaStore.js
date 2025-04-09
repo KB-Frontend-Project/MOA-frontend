@@ -1,15 +1,33 @@
 import { ref, computed, reactive } from 'vue'
 import { defineStore } from 'pinia'
+import axios from 'axios'
 
 export const useMoaStore = defineStore('moa', () => {
-  //월별 소비
-  const getMonthlySpending = entries => {
-    const monthlySpending = {} // 객체로
+  const BASEURI = '/api/entries'
+  const states = reactive({ entrieList: [] })
 
-    entries.forEach(entry => {
+  const fetchEntrieList = async () => {
+    try {
+      const response = await axios.get(BASEURI)
+      if (response.status === 200) {
+        states.entrieList = response.data
+        console.log('받은 데이터:', states.entrieList)
+      } else {
+        alert('데이터 조회 실패')
+      }
+    } catch (error) {
+      console.log('에러 발생:', error)
+    }
+  }
+
+  //월별 소비
+  const getMonthlySpending = computed(() => {
+    const monthlySpending = {}
+
+    states.entrieList.forEach(entry => {
       if (entry.isWithDraw) {
         const date = new Date(entry.when)
-        const month = date.getMonth() + 1 // 1~12월 (0-based라 +1 해줘야 함)
+        const month = date.getMonth() + 1
 
         if (!monthlySpending[month]) {
           monthlySpending[month] = 0
@@ -17,12 +35,14 @@ export const useMoaStore = defineStore('moa', () => {
         monthlySpending[month] += entry.amount
       }
     })
+
     const sortedMonthlySpending = Array.from({ length: 12 }, (_, i) => {
-      return monthlySpending[i + 1] || 0
+      return { month: i + 1, totalSpending: monthlySpending[i + 1] || 0 }
     })
 
     return sortedMonthlySpending
-  }
+  })
+
   //---------------------------------
   const user = ref(null)
   const signup = async newUser => {
@@ -58,5 +78,5 @@ export const useMoaStore = defineStore('moa', () => {
     }
   }
 
-  return { user, signup, login, getMonthlySpending }
+  return { user, signup, login, fetchEntrieList, getMonthlySpending }
 })

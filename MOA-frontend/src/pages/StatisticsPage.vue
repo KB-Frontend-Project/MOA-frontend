@@ -2,46 +2,24 @@
   <div>
     <h1>LineChart</h1>
     <LineChart :chartData="data1" :chartOptions="options1" />
-    <!-- <h1>BarChart</h1>
-    <BarChart :chartData="data2" :chartOptions="options2" />
-    <h1>PieChart</h1>
-    <PieChart :chartData="data3" :chartOptions="options3" /> -->
   </div>
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
+import { ref, reactive, onMounted, watch, computed } from 'vue'
 import LineChart from '@/components/statistics/LineGraph.vue'
-import BarChart from '@/components/statistics/BarChart.vue'
-import PieChart from '@/components/statistics/PieChart.vue'
-import axios from 'axios'
 import { useMoaStore } from '@/stores/moaStore'
 
-const BASEURI = '/api/entries'
-const states = reactive({ entrieList: [] })
-
 const moaStore = useMoaStore()
-const { getMonthlySpending } = moaStore
-
-const fetchEntrieList = async () => {
-  try {
-    const response = await axios.get(BASEURI)
-    if (response.status === 200) {
-      states.entrieList = response.data
-    } else {
-      alert('데이터 조회 실패')
-    }
-  } catch (error) {
-    console.log('에러발생 :' + error)
-  }
-}
+const { fetchEntrieList } = moaStore
+const getMonthlySpending = computed(() => moaStore.getMonthlySpending)
 
 onMounted(async () => {
   await fetchEntrieList()
-  const monthlySpending = getMonthlySpending(states.entrieList)
-  //const monthList = Object.keys(monthlySpending) // {'3', '4'}
-  // console.log(Object.keys(monthlySpending))
+  updateChartData() // 데이터 가져오고 나서 직접 그래프 업데이트
 })
+
+const selectMonth = reactive(['3', '4'])
 
 const data1 = ref({
   labels: [],
@@ -51,7 +29,7 @@ const data1 = ref({
       backgroundColor: 'rgba(75, 192, 192, 0.2)',
       borderColor: 'rgba(75, 192, 192, 1)',
       borderWidth: 2,
-      data: [300, 400, 500, 450, 600],
+      data: [],
     },
   ],
 })
@@ -69,58 +47,36 @@ const options1 = ref({
   },
 })
 
-const data2 = ref({
-  labels: ['1월', '2월', '3월', '4월', '5월'],
-  datasets: [
-    {
-      label: '매출',
-      backgroundColor: 'rgba(75, 192, 192, 0.5)',
-      borderColor: 'rgba(75, 192, 192, 1)',
-      borderWidth: 1,
-      data: [300, 400, 500, 450, 600],
-    },
-  ],
-})
+// 🔥 monthlySpending 데이터 기반으로 차트 세팅하는 함수
+const updateChartData = () => {
+  const monthlyData = getMonthlySpending.value
+  if (!monthlyData) {
+    console.warn('monthlyData가 아직 준비 안 됨')
+    return
+  }
+  console.log('전체 월별 소비 데이터:', monthlyData)
 
-const options2 = ref({
-  responsive: true,
-  plugins: {
-    legend: {
-      display: true,
-    },
-    title: {
-      display: true,
-      text: '월별 소비 막대 그래프',
-    },
-  },
-})
+  const filteredData = selectMonth.map(monthStr => {
+    const monthNum = parseInt(monthStr)
+    return monthlyData.find(item => item.month === monthNum) || { totalSpending: 0 }
+  })
 
-const data3 = ref({
-  labels: ['사과', '바나나', '체리'],
-  datasets: [
-    {
-      label: '과일 선호도',
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.6)', // 사과
-        'rgba(255, 206, 86, 0.6)', // 바나나
-        'rgba(54, 162, 235, 0.6)', // 체리
-      ],
-      data: [30, 50, 20],
-    },
-  ],
-})
+  console.log('필터링된 월 데이터:', filteredData)
 
-const options3 = ref({
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      position: 'bottom',
-    },
-    title: {
-      display: true,
-      text: '과일 선호도 파이 차트',
-    },
-  },
-})
+  data1.value.labels = selectMonth
+  data1.value.datasets[0].data = filteredData.map(item => item.totalSpending)
+}
+
+// 🔥 getMonthlySpending을 감시하다가 값이 바뀌면 updateChartData 호출
+watch(
+  () => getMonthlySpending.value,
+  newVal => {
+    if (newVal) {
+      updateChartData()
+    }
+  }
+)
+updateChartData()
+
+// onMounted에서는 호출 안 해도 됨
 </script>
