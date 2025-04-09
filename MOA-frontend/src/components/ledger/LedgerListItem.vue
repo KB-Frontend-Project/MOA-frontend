@@ -48,7 +48,6 @@
 
 <script setup>
 import { ref, reactive, watchEffect, defineProps, computed, onMounted } from 'vue'
-import BaseButtonLegacy from '../common/BaseButtonLegacy.vue'
 import BaseButton from '../common/BaseButton.vue'
 import axios from 'axios'
 

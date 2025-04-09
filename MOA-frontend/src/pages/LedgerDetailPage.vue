@@ -39,9 +39,7 @@
 
 <script setup>
 import LedgerList from '../components/ledger/LedgerList.vue'
-import BaseButtonLegacy from '../components/common/BaseButtonLegacy.vue'
 import BaseButton from '../components/common/BaseButton.vue'
-import BaseInputLegacy from '../components/common/BaseInputLegacy.vue'
 import BaseInput from '../components/common/BaseInput.vue'
 import { ref, reactive, watchEffect, onMounted, onUpdated, watch, computed } from 'vue'
 import axios from 'axios'
