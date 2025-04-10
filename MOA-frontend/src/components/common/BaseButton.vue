@@ -9,14 +9,7 @@
   >
     {{ _text }}
   </button>
-  <button
-    v-else
-    disabled
-    type="button"
-    class="btn"
-    :class="_mp"
-    :style="styles"
-  >
+  <button v-else disabled type="button" class="btn" :class="_mp" :style="styles">
     {{ _text }}
   </button>
 </template>
@@ -41,7 +34,7 @@ const styles = ref('')
 const typeClass = ref('')
 
 watchEffect(() => {
-  if (props._isActive == 'false') {
+  if (props._isActive === false) {
     isActive.value = false
   } else {
     isActive.value = true
@@ -82,7 +75,6 @@ button {
   margin: 0 1rem;
   border: none;
 }
-
 
 button[disabled] {
   background-color: ghostwhite;
