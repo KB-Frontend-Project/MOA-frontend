@@ -26,7 +26,13 @@
         </div>
 
         <div class="d-flex gap-2">
-          <BaseButton _text="흔들기" _type="fill" _w="3.5rem" _h="1.5rem" />
+          <BaseButton
+            @click="openShakePiggyBank"
+            _text="흔들기"
+            _type="fill"
+            _w="3.5rem"
+            _h="1.5rem"
+          />
           <BaseButton
             @click="unlinkAccount(idx)"
             _text="연동 해지"
@@ -67,12 +73,17 @@
       />계좌 추가하기
     </div>
   </div>
+
+  <Teleport to="#modal">
+    <ShakeBalance :shakePopup="shakePopup" @closeTrigger="closeShakePopup" />
+  </Teleport>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import BaseButton from '@/components/common/BaseButton.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
+import ShakeBalance from './ShakeBalance.vue'
 
 const accounts = ref([{ bank: '국민은행', number: '652321-43-231232' }])
 const name = ref('모찌')
@@ -81,6 +92,17 @@ const amount = ref(91172)
 const showAddAccount = ref(false)
 const newBank = ref('')
 const newNumber = ref('')
+
+const shakePopup = ref(false)
+
+const closeShakePopup = () => {
+  shakePopup.value = false
+}
+
+const openShakePiggyBank = () => {
+  console.log('통장 흔들기')
+  shakePopup.value = true
+}
 
 const addAccount = () => {
   if (newBank.value.trim() && newNumber.value.trim()) {
