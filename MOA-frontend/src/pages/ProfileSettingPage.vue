@@ -119,7 +119,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMoaStore } from '@/stores/moaStore'
 import Header from '@/components/layout/Header.vue'
@@ -136,12 +136,16 @@ const user = store.user
 const nickname = ref(user.name)
 const shakeUnit = ref(user.shake_unit)
 const alert = ref(user.alert)
-const darkMode = ref(false)
 
 const showModal = ref(false)
 const showConfirmModal = ref(false)
 const modalTitle = ref('')
 const modalMessage = ref('')
+
+const darkMode = computed({
+  get: () => store.darkMode,
+  set: (val) => store.toggleDarkMode()
+})
 
 function openConfirmModal() {
   showConfirmModal.value = true

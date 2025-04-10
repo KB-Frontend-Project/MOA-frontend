@@ -1,6 +1,5 @@
 <template>
-  <div class="app-wrapper">
-    <!-- Header, SideBar는 특정 페이지에서만 숨김 -->
+  <div :class="{ 'dark-mode': isDarkMode }" class="app-wrapper">
     <Header v-if="!noHeader" />
     <div class="layout">
       <SideBar v-if="!noSideBar" />
@@ -23,13 +22,14 @@ import ProfileSettingPage from './pages/ProfileSettingPage.vue'
 import LoginPage from './pages/LoginPage.vue'
 import HomePage from './pages/HomePage.vue'
 import ResetPasswordPage from './pages/ResetPasswordPage.vue'
+import { useMoaStore } from '@/stores/moaStore'
 
 const route = useRoute()
-
+const store = useMoaStore()
 const isModalOpen = ref(false)
 const noHeader = computed(() => route.meta.noHeader)
 const noSideBar = computed(() => route.meta.noSideBar)
-
+const isDarkMode = computed(() => store.isDarkMode)
 const toggleModal = () => {
   isModalOpen.value = !isModalOpen.value
 }
@@ -53,4 +53,11 @@ const toggleModal = () => {
   flex: 1;
   overflow: hidden;
 }
+
+.app-wrapper.dark-mode {
+  /* 다크모드 */
+  background: #222;
+  color: #eee;
+}
+
 </style>

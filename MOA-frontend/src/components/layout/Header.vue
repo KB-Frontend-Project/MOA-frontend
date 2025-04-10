@@ -1,4 +1,5 @@
 <template>
+  <div :class="{ 'isDark-mode': isDarkMode }">
   <header class="navbar navbar-expand-lg navbar-light bg-light px-4">
     <div class="d-flex align-items-center">
       <RouterLink to="/" class="d-flex align-items-center text-decoration-none text-dark">
@@ -63,18 +64,23 @@
     <InputLedgerPopup :ledgerPopup="ledgerPopup" @closetrigger="closeLedgerPopup" />
     <ShakeBalance :shakePopup="shakePopup" @closeTrigger="closeShakePopup" />
   </Teleport>
+</div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import InputLedgerPopup from '@/pages/InputLedgerPopup.vue'
 import ShakeBalance from '@/pages/ShakeBalance.vue'
-
+import { useMoaStore } from '@/stores/moaStore'
+import { useRouter } from 'vue-router'
 const menuOpen = ref(false)
 const alertOpen = ref(false)
 const ledgerPopup = ref(false)
 const shakePopup = ref(false)
+const store = useMoaStore()
+const isdDarkMode = computed(() => store.isDarkMode)
 
 const closeShakePopup = () => {
   shakePopup.value = false
@@ -142,6 +148,25 @@ const closeLedgerPopup = () => {
   width: 100%;
   height: 0.2rem;
   background-color: #55b4a1;
+}
+
+.dark-mode header {
+  background-color: #2b2b2b !important;
+  color: #fff;
+}
+
+.dark-mode .navbar-brand {
+  color: #fff !important;
+}
+
+.dark-mode .text-dark {
+  color: #fff !important;
+}
+
+.dark-mode .notification-dropdown {
+  background-color: #333;
+  color: #eee;
+  border-color: #444;
 }
 
 /* + 버튼 스타일 */
