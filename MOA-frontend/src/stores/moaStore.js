@@ -18,6 +18,7 @@ export const useMoaStore = defineStore('moa', () => {
     } catch (error) {
       console.log('에러 발생:', error)
     }
+  }
   
   const user = ref(null)
 
@@ -130,6 +131,5 @@ export const useMoaStore = defineStore('moa', () => {
     updateUser,
     deleteUser,
     getMonthlySpending
-  }
   }
 })
