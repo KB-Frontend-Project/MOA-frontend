@@ -49,6 +49,7 @@
         >
           <ul class="list-unstyled mb-0 py-2">
             <li class="px-3 py-2 hover-bg" @click="openSharedLedger">공동 가계부 생성</li>
+            <li class="px-3 py-2 hover-bg" @click="openShakePiggyBank">통장 흔들기</li>
             <li class="px-3 py-2 hover-bg" @click="openTransactionPopup">거래 내역 작성</li>
           </ul>
         </div>
@@ -102,6 +103,11 @@ const unreadCount = computed(() => {
 // 메뉴 핸들러들
 const openSharedLedger = () => {
   console.log('공동 가계부 생성')
+  menuOpen.value = false
+}
+
+const openShakePiggyBank = () => {
+  console.log('통장 흔들기')
   menuOpen.value = false
 }
 
