@@ -4,9 +4,12 @@
     <div class="d-flex justify-content-center align-items-center mb-4">
       <img src="../assets/image 40.png" alt="" style="width: 7rem" />
 
-      <div class="d-flex flex-column align-items-center mx-4">
-        <div>모아찌 님의 계좌 통장을 흔들어서 부자되세요₩!@@!#!@#ㄸ$@</div>
-        <div>현재까지 얼마 모아찌 ? - 100,000,000원</div>
+      <div class="d-flex flex-column align-items-center mx-4 text-center custom-text">
+        <div class="first-line">{{ name }}님의 통장을 흔들어서 잔돈을 차곡차곡!</div>
+        <div class="second-line">
+          현재까지 얼마 모아찌 ?
+          <span class="highlight-amount">{{ amount }}원</span>
+        </div>
       </div>
 
       <img src="../assets/image 40.png" alt="" style="width: 7rem" />
@@ -38,23 +41,30 @@
       <hr v-if="idx !== accounts.length - 1" />
     </div>
 
-    <!-- 추가 입력 폼 (바로 아래) -->
-    <div v-if="showAddAccount" class="mt-4">
-      <div class="d-flex justify-content-center gap-2 mb-3">
-        <BaseInput _ph="은행명" _type="text" v-model="newBank" />
-        <BaseInput _ph="계좌번호" _type="text" v-model="newNumber" />
-      </div>
-      <div class="d-flex justify-content-center gap-2">
-        <BaseButton @click="addAccount" _text="추가" _type="fill" _w="5rem" />
-        <BaseButton @click="cancelAdd" _text="취소" _type="" _w="5rem" />
-      </div>
+    <!-- 추가 입력 폼 (한 줄에 정렬) -->
+    <div v-if="showAddAccount" class="d-flex justify-content-center align-items-center gap-2 mt-4">
+      <BaseInput _ph="은행명" _type="text" v-model="newBank" style="width: 10rem" />
+      <BaseInput
+        _ph="계좌번호"
+        _type="text"
+        v-model="newNumber"
+        @input="formatAccountNumber"
+        style="width: 15rem"
+      />
+      <BaseButton @click="addAccount" _text="추가" _type="fill" _w="4rem" />
+      <BaseButton @click="cancelAdd" _text="취소" _type="" _w="4rem" />
     </div>
 
     <hr />
 
     <!-- 맨 아래 '연동하기' 버튼 -->
     <div class="d-flex justify-content-center">
-      <BaseButton @click="showAddAccount = true" _text="계좌 추가하기" _type="fill" _w="30rem" />
+      <BaseButton
+        @click="showAddAccount = true"
+        _text="+"
+        _type="borderline"
+        class="add-item"
+      />계좌 추가하기
     </div>
   </div>
 </template>
@@ -65,6 +75,8 @@ import BaseButton from '@/components/common/BaseButton.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
 
 const accounts = ref([{ bank: '국민은행', number: '652321-43-231232' }])
+const name = ref('모찌')
+const amount = ref(91172)
 
 const showAddAccount = ref(false)
 const newBank = ref('')
@@ -90,13 +102,53 @@ const cancelAdd = () => {
   newNumber.value = ''
   showAddAccount.value = false
 }
+
+const formatAccountNumber = e => {
+  let rawValue = e.target.value.replace(/\D/g, '') // 숫자만 남기고 전부 제거
+  let formatted = ''
+
+  if (rawValue.length <= 6) {
+    formatted = rawValue
+  } else if (rawValue.length <= 8) {
+    formatted = rawValue.slice(0, 6) + '-' + rawValue.slice(6)
+  } else {
+    formatted = rawValue.slice(0, 6) + '-' + rawValue.slice(6, 8) + '-' + rawValue.slice(8, 14)
+  }
+
+  newNumber.value = formatted
+}
 </script>
 
 <style scoped>
-hr {
-  border: none;
-  height: 1px;
-  background-color: #ccc;
-  margin: 1rem 0;
+.add-item {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  margin-left: 0;
+}
+
+.custom-text {
+  font-family: 'Pretendard', sans-serif;
+  gap: 0.5rem;
+}
+
+.first-line {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.3rem;
+}
+
+.second-line {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #666;
+}
+
+.highlight-amount {
+  font-size: 1.4rem; /* 금액만 더 크게 */
+  font-weight: 700; /* 금액은 더 두껍게 */
+  color: #de8f5f; /* 눈에 잘 띄는 포인트 색 */
+  margin-left: 0.3rem;
 }
 </style>
