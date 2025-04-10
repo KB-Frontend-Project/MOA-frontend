@@ -1,6 +1,5 @@
 <template>
   <div :class="{ 'dark-mode': isDarkMode }" class="app-wrapper">
-  <div :class="{ 'dark-mode': isDarkMode }" class="app-wrapper">
     <Header v-if="!noHeader" />
     <div class="layout">
       <SideBar v-if="!noSideBar" />
@@ -24,15 +23,12 @@ import LoginPage from './pages/LoginPage.vue'
 import HomePage from './pages/HomePage.vue'
 import ResetPasswordPage from './pages/ResetPasswordPage.vue'
 import { useMoaStore } from '@/stores/moaStore'
-import { useMoaStore } from '@/stores/moaStore'
 
 const route = useRoute()
-const store = useMoaStore()
 const store = useMoaStore()
 const isModalOpen = ref(false)
 const noHeader = computed(() => route.meta.noHeader)
 const noSideBar = computed(() => route.meta.noSideBar)
-const isDarkMode = computed(() => store.isDarkMode)
 const isDarkMode = computed(() => store.isDarkMode)
 const toggleModal = () => {
   isModalOpen.value = !isModalOpen.value
@@ -89,4 +85,20 @@ onMounted(() => {
   color: #eee;
 }
 
+.dark-mode .bg-light {
+  background-color: #2b2b2b !important;
+}
+.dark-mode .text-dark {
+  color: #eee !important;
+}
+.dark-mode .form-control {
+  background-color: #3a3a3a;
+  color: #eee;
+  border-color: #555;
+}
+.dark-mode .card {
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+  border: 1px solid #444;
+}
 </style>
