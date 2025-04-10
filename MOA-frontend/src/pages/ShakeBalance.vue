@@ -4,9 +4,8 @@
       <template #ledgerPopup v-if="show">
         <div class="coin-bank-container">
           <div class="bank-account">
-            <h2>나의 통장</h2>
             <p class="balance">잔액: {{ formattedBalance }}원</p>
-            <button class="shake-button" @click="shakeBank" :disabled="isShaking">
+            <button class="shake-button" @click="handleShakeBank" :disabled="isShaking">
               통장 흔들기
             </button>
           </div>
@@ -43,31 +42,18 @@
 <script setup>
 import BaseModal from '@/components/common/BaseModal.vue'
 import BaseButton from '@/components/common/BaseButton.vue'
-import { onMounted, ref, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useMoaStore } from '@/stores/moaStore.js'
 
 const moaStore = useMoaStore()
-
-const { fetchLedgerList, fetchUserLedgerList } = moaStore
-const getMyLedgerList = computed(() => moaStore.getMyLedgerList)
-
-onMounted(async () => {
-  await fetchLedgerList()
-  await fetchUserLedgerList()
-  console.log('data:', getMyLedgerList.value)
-})
+const { putCurrentAccount } = moaStore
 
 const title = ref('통장 흔들기')
 const message = ref('')
 const show = ref(true) // slot 보이기 여부
 const shakeUnit = ref(10)
 
-const props = defineProps({
-  shakePopup: {
-    type: Boolean,
-    required: true,
-  },
-})
+const props = defineProps(['selectedAccount', 'shakePopup'])
 
 // 부모에게 'close' 이벤트를 보낼 준비
 const emit = defineEmits(['closeTrigger'])
@@ -77,7 +63,6 @@ const closeTrigger = () => {
   console.log('작동')
 }
 
-const balance = ref(125460) // 초기 잔액
 const savings = ref(0) // 저금통 금액
 const isShaking = ref(false)
 const coins = ref([])
@@ -85,7 +70,7 @@ let coinIdCounter = 0
 
 // 금액 포맷팅 함수
 const formattedBalance = computed(() => {
-  return balance.value.toLocaleString()
+  return parseInt(props.selectedAccount.balance).toLocaleString()
 })
 
 const formattedSavings = computed(() => {
@@ -99,11 +84,12 @@ const shakeBank = async () => {
   isShaking.value = true
 
   // 10원 단위 계산
-  const changeAmount = balance.value % 100
+  const changeAmount = props.selectedAccount.balance % (shakeUnit.value * 10)
 
   if (changeAmount > 0) {
     // 통장에서 돈 빼기
-    balance.value = Math.floor(balance.value / 100) * 100
+    props.selectedAccount.balance =
+      Math.floor(props.selectedAccount.balance / (shakeUnit.value * 10)) * (shakeUnit.value * 10)
 
     // 동전 애니메이션 생성
     createCoinAnimation(changeAmount)
@@ -143,6 +129,11 @@ const createCoinAnimation = totalAmount => {
       value: '10',
     })
   }
+}
+
+const handleShakeBank = async () => {
+  await shakeBank()
+  await putCurrentAccount(props.selectedAccount)
 }
 </script>
 

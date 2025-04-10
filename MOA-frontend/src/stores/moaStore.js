@@ -189,6 +189,42 @@ export const useMoaStore = defineStore('moa', () => {
     }
   }
 
+  const putCurrentAccount = async (account, successCallback = () => {}) => {
+    try {
+      const response = await axios.put(`${ACCOUNT_URL}/${account.id}`, account)
+      if (response.status === 200) {
+        console.log('response 200')
+        successCallback()
+      }
+    } catch (error) {
+      console.error('putCurrentAccount Error', error)
+    }
+  }
+
+  const putUserBalance = async (balance) = {
+
+  
+  }
+
+  const getMyLedgerList = computed(() => {
+    // const user = { id: 1 }
+    //임시 데이터!!! 나중에 user.id -> user.value.id로 수정
+    const myLedgerIdList = states.userLedgerList
+      .filter(item => {
+        if (item.userId === user.value.id) {
+          return item.ledgerId
+        }
+      })
+      .map(item => item.ledgerId)
+    //결과 : [1, 2, ...]
+
+    const myLedgerList = states.ledgerList.filter(ledger =>
+      myLedgerIdList.includes(parseInt(ledger.id))
+    )
+
+    return myLedgerList
+  })
+
   const getMonthlySpending = computed(() => {
     const monthlySpending = {}
 
@@ -290,6 +326,7 @@ export const useMoaStore = defineStore('moa', () => {
     updateUser,
     deleteUser,
     fetchEntrieList,
+    putCurrentAccount,
     getMyAccountList,
     getMyLedgerList,
     user,

@@ -27,7 +27,7 @@
 
         <div class="d-flex gap-2">
           <BaseButton
-            @click="openShakePiggyBank"
+            @click="openShakePiggyBank(account)"
             _text="흔들기"
             _type="fill"
             _w="3.5rem"
@@ -75,7 +75,11 @@
   </div>
 
   <Teleport to="#modal">
-    <ShakeBalance :shakePopup="shakePopup" @closeTrigger="closeShakePopup" />
+    <ShakeBalance
+      :selectedAccount="selectedAccount"
+      :shakePopup="shakePopup"
+      @closeTrigger="closeShakePopup"
+    />
   </Teleport>
 </template>
 
@@ -94,6 +98,7 @@ const getMyAccountList = computed(() => moaStore.getMyAccountList)
 const accounts = ref([{ bank: '국민은행', number: '652321-43-231232' }])
 const name = ref('모찌')
 const amount = ref(91172)
+const selectedAccount = ref({})
 
 const showAddAccount = ref(false)
 const newBank = ref('')
@@ -105,7 +110,8 @@ const closeShakePopup = () => {
   shakePopup.value = false
 }
 
-const openShakePiggyBank = () => {
+const openShakePiggyBank = account => {
+  selectedAccount.value = account
   console.log('통장 흔들기')
   shakePopup.value = true
 }
@@ -147,7 +153,6 @@ const formatAccountNumber = e => {
 }
 
 onMounted(async () => {
-  console.log('asdf')
   await fetchAccountList()
   await fetchUserAccountList()
 })
