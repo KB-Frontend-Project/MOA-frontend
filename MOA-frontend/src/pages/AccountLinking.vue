@@ -5,10 +5,10 @@
       <img src="../assets/image 40.png" alt="" style="width: 7rem" />
 
       <div class="d-flex flex-column align-items-center mx-4 text-center custom-text">
-        <div class="first-line">{{ name }}님의 통장을 흔들어서 잔돈을 차곡차곡!</div>
+        <div class="first-line">{{ user.name }}님의 통장을 흔들어서 잔돈을 차곡차곡!</div>
         <div class="second-line">
           현재까지 얼마 모아찌 ?
-          <span class="highlight-amount">{{ amount }}원</span>
+          <span class="highlight-amount">{{ user.balance.toLocaleString() }}원</span>
         </div>
       </div>
 
@@ -42,9 +42,6 @@
           />
         </div>
       </div>
-
-      <!-- 마지막이 아닌 줄만 구분선 -->
-      <hr v-if="idx !== accounts.length - 1" />
     </div>
 
     <!-- 추가 입력 폼 (한 줄에 정렬) -->
@@ -92,12 +89,10 @@ import { useMoaStore } from '@/stores/moaStore.js'
 
 const moaStore = useMoaStore()
 
-const { fetchAccountList, fetchUserAccountList } = moaStore
+const { fetchAccountList, fetchUserAccountList, postUserAccount, postUserAccountId, user } =
+  moaStore
 const getMyAccountList = computed(() => moaStore.getMyAccountList)
 
-const accounts = ref([{ bank: '국민은행', number: '652321-43-231232' }])
-const name = ref('모찌')
-const amount = ref(91172)
 const selectedAccount = ref({})
 
 const showAddAccount = ref(false)
@@ -116,9 +111,10 @@ const openShakePiggyBank = account => {
   shakePopup.value = true
 }
 
-const addAccount = () => {
+const addAccount = async () => {
   if (newBank.value.trim() && newNumber.value.trim()) {
-    accounts.value.push({ bank: newBank.value, number: newNumber.value })
+    await postUserAccount({ bank: newBank.value, accountNumber: newNumber.value, balance: 0 })
+    await postUserAccountId()
     newBank.value = ''
     newNumber.value = ''
     showAddAccount.value = false
