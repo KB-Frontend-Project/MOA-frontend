@@ -4,9 +4,37 @@ import axios from 'axios'
 
 export const useMoaStore = defineStore('moa', () => {
   const BASEURI = '/api/entries'
-  const states = ref({ entrieList: [] })
   const categoryWithdraw = ['식비', '교통', '쇼핑', ' 문화']
   const categoryIncome = ['급여', '기타']
+  // 전역에서 내 것에 해당하는 가계부 모두 뽑아서 관리
+  // const myLedgerList = ref([])
+  // const myLedgerIdList = ref([])
+
+  //userId ==> ledgerIdList
+  // const getLedgerId = async userId => {
+  //   try {
+  //     const response = await axios.get(`/api/user_ledgers?userId=${userId}`)
+  //     if (response.status === 200) {
+  //       myLedgerIdList.value = response.data.map(data => data.ledgerId)
+  //       return true
+  //     }
+  //   } catch (error) {
+  //     console.error('getLedgerList error:', error)
+  //   }
+  // }
+
+  // //ledgerId ==> ledger 정보
+  // const getLedgerDataById = async ledgerId => {
+  //   try {
+  //     const response = await axios.get(`/api/ledgers?id=${ledgerId}`)
+  //     if (response.status === 200) {
+  //       myLedgerList.value = response.data
+  //       return true
+  //     }
+  //   } catch (error) {
+  //     console.error('getLedgerList error:', error)
+  //   }
+  // }
 
   // entrieList(가계부 항목) 외에 다른 컬렉션들도 담기 가능
   const states = reactive({
@@ -155,6 +183,25 @@ export const useMoaStore = defineStore('moa', () => {
     }
   }
 
+  const getMyLedgerList = computed(() => {
+    // const user = { id: 1 }
+    //임시 데이터!!! 나중에 user.id -> user.value.id로 수정
+    const myLedgerIdList = states.userLedgerList
+      .filter(item => {
+        if (item.userId === user.value.id) {
+          return item.ledgerId
+        }
+      })
+      .map(item => item.ledgerId)
+    //결과 : [1, 2, ...]
+
+    const myLedgerList = states.ledgerList.filter(ledger =>
+      myLedgerIdList.includes(parseInt(ledger.id))
+    )
+
+    return myLedgerList
+  })
+
   const getMonthlySpending = computed(() => {
     const monthlySpending = {}
 
@@ -234,12 +281,17 @@ export const useMoaStore = defineStore('moa', () => {
     updateUser,
     deleteUser,
     fetchEntrieList,
+    // getLedgerId,
+    // getLedgerDataById,
+    getMyLedgerList,
     user,
     categoryWithdraw,
     categoryIncome,
     getMonthlySpending,
     getWeeklySpending,
     getCategorySpending,
+    // myLedgerIdList,
+    // myLedgerList,
     getMonthlySpending,
   }
 })

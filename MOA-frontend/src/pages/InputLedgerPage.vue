@@ -2,14 +2,15 @@
   <div class="input-page-container">
     <div class="ledger-select-container">
       <BaseButton
-        v-for="ledger in ledgerList"
-        @click="handleSelectedLedger(ledger.ledgerId)"
+        v-for="ledger in getMyLedgerList"
+        @click="handleSelectedLedger(ledger.id)"
         _type="borderline"
-        :_text="ledger.title"
-        :value="ledger.ledgerId"
+        :_text="ledger.name"
+        _isActive="true"
+        :value="ledger.id"
         :class="{
           'ledger-select-button': true,
-          'not-selected': selectedLedgerId !== ledger.ledgerId,
+          'not-selected': selectedLedgerId !== ledger.id,
         }"
       />
     </div>
@@ -47,6 +48,7 @@
                 v-if="index > 0"
                 @click="handleDeleteInputItem(index)"
                 _type="borderline"
+                _isActive="true"
                 _text="-"
                 class="delete-item"
               />
@@ -57,6 +59,7 @@
               @click="handleAddInputItem"
               _type="borderline"
               _text="+"
+              _isActive="true"
               class="add-item"
             />내역 추가
           </div>
@@ -66,6 +69,7 @@
           _text="작성 완료"
           :_isActive="isDataFullfiled === 1"
           class="input-submit"
+          type="submit"
         />
       </form>
     </div>
@@ -77,14 +81,15 @@ import BaseButton from '@/components/common/BaseButton.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
 import { useMoaStore } from '@/stores/moaStore.js'
 import { useMoaStoreForInput } from '@/stores/moaStoreForInput.js'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 const moaStoreForInput = useMoaStoreForInput()
 const moaStore = useMoaStore()
 const { fetchLedgerInput } = moaStoreForInput
-const { categoryWithdraw, categoryIncome } = moaStore
+const { categoryWithdraw, categoryIncome, fetchLedgerList, fetchUserLedgerList } = moaStore
+const getMyLedgerList = computed(() => moaStore.getMyLedgerList)
 
-const selectedLedgerId = ref(1)
+const selectedLedgerId = ref('1')
 const today = computed(() => {
   const today = new Date()
   const year = today.getFullYear()
@@ -93,16 +98,6 @@ const today = computed(() => {
 
   return `${year}-${month}-${day}`
 })
-const ledgerList = ref([
-  {
-    title: 'asdf님의 가계부',
-    ledgerId: 1,
-  },
-  {
-    title: '누구님의 가계부',
-    ledgerId: 2,
-  },
-])
 
 const inputList = ref([
   {
@@ -169,6 +164,12 @@ const isDataFullfiled = computed(() => {
       acc & (cur.where.length !== 0) & (cur.category.length !== 0) & (cur.desc.length !== 0),
     true
   )
+})
+
+onMounted(async () => {
+  await fetchLedgerList()
+  await fetchUserLedgerList()
+  console.log(getMyLedgerList.value)
 })
 </script>
 
