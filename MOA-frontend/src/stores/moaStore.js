@@ -4,7 +4,8 @@ import axios from 'axios'
 
 export const useMoaStore = defineStore('moa', () => {
   const BASEURI = '/api/entries'
-  const states = reactive({ entrieList: [] })
+  const states = ref({ entrieList: [] })
+  const category = ['식비', '교통', '쇼핑', ' 문화']
 
   const fetchEntrieList = async () => {
     try {
@@ -19,15 +20,15 @@ export const useMoaStore = defineStore('moa', () => {
       console.log('에러 발생:', error)
     }
   }
-  
+
   const user = ref(null)
 
-  const signup = async (newUser) => {
+  const signup = async newUser => {
     try {
       const res = await fetch('http://localhost:3000/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newUser)
+        body: JSON.stringify(newUser),
       })
       if (!res.ok) throw new Error('회원가입 실패')
       const result = await res.json()
@@ -66,13 +67,13 @@ export const useMoaStore = defineStore('moa', () => {
     user.value = null
     localStorage.removeItem('moa-user')
   }
-  
+
   const updateUser = async (id, data) => {
     try {
       const res = await fetch(`http://localhost:3000/users/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       })
       if (!res.ok) throw new Error('업데이트 실패')
       const updated = await res.json()
@@ -85,10 +86,10 @@ export const useMoaStore = defineStore('moa', () => {
     }
   }
 
-  const deleteUser = async (id) => {
+  const deleteUser = async id => {
     try {
       const res = await fetch(`http://localhost:3000/users/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       })
       if (!res.ok) throw new Error('삭제 실패')
       user.value = null
@@ -122,14 +123,61 @@ export const useMoaStore = defineStore('moa', () => {
     return sortedMonthlySpending
   })
 
+  const getWeeklySpending = computed(() => {
+    const weeklySpending = []
+    const today = new Date()
+    const month = today.getMonth() + 1
+    const year = today.getFullYear()
+
+    for (let i = 0; i < 4; i++) {
+      weeklySpending.push({
+        withDraw: 0,
+        income: 0,
+      })
+    }
+    states.entrieList.forEach(entry => {
+      const entryDate = new Date(entry.when)
+      const entryDay = entryDate.getDate()
+      const entryMonth = entryDate.getMonth() + 1
+      const entryYear = entryDate.getFullYear()
+
+      if (entryMonth === month && entryYear === year) {
+        let index = Math.min(3, Math.floor((entryDay - 1) / 7))
+
+        if (entry.isWithDraw) {
+          weeklySpending[index].withDraw += entry.amount
+        } else {
+          weeklySpending[index].income += entry.amount
+        }
+      }
+    })
+    return weeklySpending
+  })
+
+  const getCategorySpending = computed(() => {
+    const categorySpending = { 식비: 0, 교통: 0, 쇼핑: 0, 문화: 0 }
+
+    states.entrieList.forEach(entry => {
+      if (entry.isWithDraw) {
+        categorySpending[entry.category] += entry.amount
+      }
+    })
+
+    return categorySpending
+  })
+
   return {
-    user,
     signup,
     login,
     loadUserFromLocalStorage,
     logout,
     updateUser,
     deleteUser,
-    getMonthlySpending
+    fetchEntrieList,
+    user,
+    category,
+    getMonthlySpending,
+    getWeeklySpending,
+    getCategorySpending,
   }
 })
