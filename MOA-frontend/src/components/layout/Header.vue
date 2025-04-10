@@ -8,8 +8,8 @@
     </div>
 
     <div class="ms-auto d-flex align-items-center gap-3 position-relative">
-      <!-- ✅ 종 아이콘 + 뱃지 -->
-      <div class="position-relative" @click="toggleAlert" style="cursor: pointer">
+      <!-- 종 아이콘 + 뱃지 -->
+      <div class="position-relative" @click="toggleAlert" style="cursor: pointer;">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           height="26"
@@ -22,10 +22,10 @@
           />
         </svg>
 
-        <!-- 🔴 뱃지 -->
+        <!-- 뱃지 -->
         <span v-if="unreadCount > 0" class="badge">{{ unreadCount }}</span>
 
-        <!-- 📩 알림 목록 -->
+        <!-- 알림 목록 -->
         <div v-if="alertOpen" class="notification-dropdown">
           <div
             v-for="(text, index) in notificationList"
@@ -39,7 +39,7 @@
         </div>
       </div>
 
-      <!-- ➕ 메뉴 버튼 -->
+      <!-- + 메뉴 버튼 -->
       <div class="position-relative">
         <button class="circle-button" @click="toggleMenu">+</button>
         <div
@@ -83,7 +83,7 @@ const toggleAlert = () => {
   menuOpen.value = false
 }
 
-// 🔔 알림 관련
+// 알림 관련
 const notificationList = ref([
   '내일은 국민카드 결제일입니다!',
   '3일후에 넷플릭스(고정지출) 14,900원 결제됩니다!',
@@ -136,7 +136,7 @@ const closeLedgerPopup = () => {
   background-color: #55b4a1;
 }
 
-/* 🔘 + 버튼 스타일 */
+/* + 버튼 스타일 */
 .circle-button {
   background-color: #55b4a1;
   color: white;
@@ -155,7 +155,7 @@ const closeLedgerPopup = () => {
   background-color: #4aa792;
 }
 
-/* 🔔 알림 뱃지 */
+/* 알림 뱃지 */
 .badge {
   position: absolute;
   top: -2px;
@@ -168,7 +168,7 @@ const closeLedgerPopup = () => {
   font-weight: bold;
 }
 
-/* 📩 드롭다운 스타일 */
+/* 드롭다운 스타일 */
 .notification-dropdown {
   position: absolute;
   right: 0;
@@ -192,7 +192,7 @@ const closeLedgerPopup = () => {
   border-bottom: none;
 }
 
-/* ✅ 읽은 알림 처리 */
+/* 읽은 알림 처리 */
 .read {
   color: #999;
   font-style: italic;

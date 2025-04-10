@@ -1,5 +1,4 @@
 <template>
-  <Header />
   <div class="login-page">
     <div class="login-container">
       <img src="@/assets/login.png" alt="login" class="login-img" />

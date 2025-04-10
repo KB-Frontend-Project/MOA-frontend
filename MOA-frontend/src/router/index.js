@@ -7,6 +7,7 @@ import StatisticsPage from '@/pages/StatisticsPage.vue'
 import LedgerDetailPage from '@/pages/LedgerDetailPage.vue'
 import CalendarPage from '@/pages/CalendarPage.vue'
 import InputLedgerPage from '@/pages/InputLedgerPage.vue'
+import RessetPasswordPage from '@/pages/RessetPasswordPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,13 +22,13 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginPage,
-      meta: { guest: true },
+      meta: { guest: true, noSideBar: true },
     },
     {
       path: '/signup',
       name: 'signup',
       component: SignUpPage,
-      meta: { guest: true },
+      meta: { guest: true, noSideBar: true },
     },
     {
       path: '/profile',
@@ -59,6 +60,12 @@ const router = createRouter({
       name: 'input-ledger',
       component: InputLedgerPage,
       meta: { requiresAuth: true },
+    },
+    {
+      path: '/password',
+      name: 'password',
+      component: RessetPasswordPage,
+      meta: { requiresAuth: true, noSideBar: true },
     },
     {
       path: '/:pathMatch(.*)*',

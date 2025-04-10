@@ -1,5 +1,4 @@
 <template>
-  <Header />
   <div class="signup-page">
     <div class="signup-container">
       <img src="@/assets/signup.png" alt="signup" class="signup-img" />
