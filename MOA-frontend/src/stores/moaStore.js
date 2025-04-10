@@ -15,6 +15,7 @@ export const useMoaStore = defineStore('moa', () => {
     userAccountList: [],
     accountList: [],
   })
+  const isDarkMode = ref(false)
 
   //테스트용 더미
   const user = ref({
