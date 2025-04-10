@@ -14,7 +14,6 @@ export const useMoaStore = defineStore('moa', () => {
 
   const user = ref(null)
   const isDarkMode = ref(false)
-  const isDarkMode = ref(false)
 
   const ENTRIES_URL = '/api/entries'
   const LEDGERS_URL = '/api/ledgers'
