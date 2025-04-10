@@ -36,7 +36,8 @@ export const useMoaStore = defineStore('moa', () => {
   const USER_LEDGERS_URL = '/api/user_ledgers'
   const ACCOUNT_URL = '/api/accounts'
   const USER_ACCOUNT_URL = '/api/user_accounts'
-
+  const isDarkMode = ref(false)
+  
   function toggleDarkMode() {
     isDarkMode.value = !isDarkMode.value
     localStorage.setItem('darkMode', isDarkMode.value)
