@@ -236,4 +236,31 @@ onMounted(async () => {
   }
 }
 
+.dark-mode .recent,
+.dark-mode .monthly,
+.dark-mode .transaction,
+.dark-mode .chart-box,
+.dark-mode .fixed-expenses {
+  background-color: #2b2b2b !important;
+  color: #eee;
+  border-color: #3a3a3a !important;
+}
+
+.dark-mode .monthly .income {
+  color: #80d9a1;
+}
+.dark-mode .monthly .expense {
+  color: #ff8a80;
+}
+
+.dark-mode .fixed-item .amount,
+.dark-mode .fixed-item .desc {
+  color: #ddd;
+}
+
+.dark-mode h2 {
+  color: #f0f0f0;
+}
+
+
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="login-page">
     <div class="login-container">
-      <img src="@/assets/login.png" alt="login" class="login-img" />
+      <img :src="isDarkMode ? darkImg : lightImg" alt="login" class="login-img" />
 
       <BaseInput v-model="email" _type="text" _ph="이메일" _w="100%" />
       <BaseInput v-model="password" _type="password" _ph="비밀번호" _w="100%" />
@@ -33,16 +33,19 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import Header from '@/components/layout/Header.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
 import BaseButton from '@/components/common/BaseButton.vue'
 import BaseModal from '@/components/common/BaseModal.vue'
 import { useMoaStore } from '@/stores/moaStore'
 import { useRouter } from 'vue-router'
-
+const isDarkMode = computed(() => store.isDarkMode)
 const router = useRouter()
 const store = useMoaStore()
+
+const lightImg = new URL('@/assets/login-light.png', import.meta.url).href
+const darkImg = new URL('@/assets/login-dark.png', import.meta.url).href
 
 const email = ref('')
 const password = ref('')
@@ -123,5 +126,15 @@ const handleModalClose = () => {
 }
 .footer-link:hover {
   text-decoration: underline;
+}
+
+.dark-mode .form-control {
+  background-color: #333;
+  color: #eee;
+  border-color: #666;
+}
+
+.dark-mode .form-control::placeholder {
+  color: #aaa;
 }
 </style>

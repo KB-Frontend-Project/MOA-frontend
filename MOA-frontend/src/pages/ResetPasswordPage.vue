@@ -1,105 +1,53 @@
 <template>
-  <div class="reset-password-page">
+  <div :class="{ 'dark-mode': isDarkMode }" class="reset-password-page">
     <div class="reset-password-container">
       <!-- 상단 아이콘 / 제목 -->
       <div class="reset-password-header">
-        <img src="@/assets/resetpw.png" alt="pw" class="reset-pw-img" />
+        <img :src="imageSrc" alt="비밀번호 찾기 이미지" class="reset-pw-img" />
         <h2>비밀번호 찾기</h2>
       </div>
 
-      <!-- 1) 이메일 입력 & 인증 버튼 -->
+      <!-- 이메일 입력 -->
       <div class="input-row" v-if="currentStep >= 1">
-        <BaseInput
-          v-model="email"
-          _type="text"
-          _ph="E-MAIL"
-          _w="80"
-        />
-        <BaseButton
-          _text="인증"
-          _type="fill"
-          _isActive="true"
-          _w="5"            
-          _h="2.5"             
-          _textSize="0.9"    
-          @click="handleEmailVerify"
-        />
+        <BaseInput v-model="email" _type="text" _ph="E-MAIL" _w="80" />
+        <BaseButton _text="인증" _type="fill" _isActive="true" _w="5" _h="2.5" _textSize="0.9" @click="handleEmailVerify" />
       </div>
 
-      <!-- 2) 인증번호 입력 & 확인 버튼 (step >= 2 일 때 표시) -->
+      <!-- 인증번호 입력 -->
       <div class="input-row" v-if="currentStep >= 2">
-        <BaseInput
-          v-model="verifyCode"
-          _type="text"
-          _ph="6자리 숫자"
-          _w="80"
-        />
-        <BaseButton
-          _text="확인"
-          _type="fill"
-          _isActive="true"
-          _w="5"
-          _h="2.5"
-          _textSize="0.9"
-          @click="handleCodeCheck"
-        />
+        <BaseInput v-model="verifyCode" _type="text" _ph="6자리 숫자" _w="80" />
+        <BaseButton _text="확인" _type="fill" _isActive="true" _w="5" _h="2.5" _textSize="0.9" @click="handleCodeCheck" />
       </div>
 
-      <!-- 3) 비밀번호 / 비밀번호 확인 & 변경 버튼 (step >= 3 일 때 표시) -->
-      <!-- 3단계: 비밀번호 / 확인 / 버튼 -->
-        <div class="input-row input-step3" v-if="currentStep >= 3">
-        <!-- 첫 줄: PASSWORD -->
+      <!-- 비밀번호 재설정 -->
+      <div class="input-row input-step3" v-if="currentStep >= 3">
         <div class="password-line">
-        <BaseInput
-            v-model="newPassword"
-            _type="password"
-            _ph="PASSWORD"
-            _w="60"
-        />
+          <BaseInput v-model="newPassword" _type="password" _ph="PASSWORD" _w="60" />
         </div>
-
-        <!-- 두 번째 줄: PASSWORD 확인 + 버튼 -->
         <div class="pw-row">
-            <BaseInput
-            v-model="confirmPassword"
-            _type="password"
-            _ph="PASSWORD 확인"
-            _w="74"
-            />
-            <BaseButton
-            _text="변경"
-            _type="fill"
-            _isActive="true"
-            _w="5"
-            _h="2.5"
-            _textSize="0.9"
-            @click="handleChangePassword"
-            />
+          <BaseInput v-model="confirmPassword" _type="password" _ph="PASSWORD 확인" _w="74" />
+          <BaseButton _text="변경" _type="fill" _isActive="true" _w="5" _h="2.5" _textSize="0.9" @click="handleChangePassword" />
         </div>
-        </div>
-
+      </div>
     </div>
 
-    <!-- 변경 성공 등의 메시지를 위한 모달 -->
-    <BaseModal
-      :isModal="showModal"
-      :title="modalTitle"
-      :message="modalMessage"
-      @close="handleModalClose"
-    />
+    <!-- 모달 -->
+    <BaseModal :isModal="showModal" :title="modalTitle" :message="modalMessage" @close="handleModalClose" />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '@/components/layout/Header.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
 import BaseButton from '@/components/common/BaseButton.vue'
 import BaseModal from '@/components/common/BaseModal.vue'
+import { useMoaStore } from '@/stores/moaStore'
 
 // 단계 제어 변수: 1=이메일입력, 2=인증코드 확인, 3=비밀번호 재설정
 const currentStep = ref(1)
+const store = useMoaStore()
 
 // 입력값
 const email = ref('')
@@ -115,6 +63,15 @@ const modalMessage = ref('')
 // 라우터
 const router = useRouter()
 
+//다크모드
+const darkMode = computed(() => store.isDarkMode) 
+
+const isDarkMode = computed(() => store.isDarkMode)
+const imageSrc = computed(() =>
+  isDarkMode.value
+    ? new URL('@/assets/resetpw-dark.png', import.meta.url).href
+    : new URL('@/assets/resetpw-light.png', import.meta.url).href
+)
 // ------------------ step 1) 이메일 인증 버튼 ------------------
 const handleEmailVerify = async () => {
   if (!email.value) {
