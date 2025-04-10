@@ -3,12 +3,25 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 
 export const useMoaStore = defineStore('moa', () => {
-  const BASEURI = '/api/entries'
-  const states = reactive({ entrieList: [] })
+
+  // entrieList(가계부 항목) 외에 다른 컬렉션들도 담기 가능
+  const states = reactive({
+    entrieList: [],
+    ledgerList: [],
+    userList: [],
+    userLedgerList: [],
+  })
+
+  const user = ref(null)
+
+  const ENTRIES_URL = '/api/entries'
+  const LEDGERS_URL = '/api/ledgers'
+  const USERS_URL = '/api/users'
+  const USER_LEDGERS_URL = '/api/user_ledgers'
 
   const fetchEntrieList = async () => {
     try {
-      const response = await axios.get(BASEURI)
+      const response = await axios.get(ENTRIES_URL)
       if (response.status === 200) {
         states.entrieList = response.data
         console.log('받은 데이터:', states.entrieList)
@@ -20,7 +33,45 @@ export const useMoaStore = defineStore('moa', () => {
     }
   }
   
-  const user = ref(null)
+  /**
+   * 4) Ledgers / Users / UserLedgers 가져오기 (확장 예시)
+   *    - 필요하다면 각 컬렉션도 불러와서 사용 가능합니다.
+   */
+  const fetchLedgerList = async () => {
+    try {
+      const res = await axios.get(LEDGERS_URL)
+      if (res.status === 200) {
+        states.ledgerList = res.data
+        console.log('ledgerList:', states.ledgerList)
+      }
+    } catch (err) {
+      console.error('fetchLedgerList 에러:', err)
+    }
+  }
+
+  const fetchUserList = async () => {
+    try {
+      const res = await axios.get(USERS_URL)
+      if (res.status === 200) {
+        states.userList = res.data
+        console.log('userList:', states.userList)
+      }
+    } catch (err) {
+      console.error('fetchUserList 에러:', err)
+    }
+  }
+
+  const fetchUserLedgerList = async () => {
+    try {
+      const res = await axios.get(USER_LEDGERS_URL)
+      if (res.status === 200) {
+        states.userLedgerList = res.data
+        console.log('userLedgerList:', states.userLedgerList)
+      }
+    } catch (err) {
+      console.error('fetchUserLedgerList 에러:', err)
+    }
+  }
 
   const signup = async (newUser) => {
     try {
@@ -124,8 +175,13 @@ export const useMoaStore = defineStore('moa', () => {
 
   return {
     user,
+    states,
     signup,
     login,
+    fetchEntrieList,
+    fetchLedgerList,
+    fetchUserList,
+    fetchUserLedgerList,
     loadUserFromLocalStorage,
     logout,
     updateUser,
