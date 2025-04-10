@@ -3,6 +3,9 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 
 export const useMoaStore = defineStore('moa', () => {
+  const categoryWithdraw = ['식비', '교통', '쇼핑', ' 문화']
+  const categoryIncome = ['급여', '기타']
+
   // entrieList(가계부 항목) 외에 다른 컬렉션들도 담기 가능
   const states = reactive({
     entrieList: [],
@@ -16,7 +19,7 @@ export const useMoaStore = defineStore('moa', () => {
   //테스트용 더미
   const user = ref({
     id: '1',
-    name: '홍길동',
+    name: '모찌',
     email: 'hong',
     password: 'password123',
     image: 'profile1.jpg',
@@ -199,6 +202,37 @@ export const useMoaStore = defineStore('moa', () => {
     }
   }
 
+  const postUserAccount = async (account, successCallback = () => {}) => {
+    try {
+      const response = await axios.post(`${ACCOUNT_URL}`, {
+        ...account,
+        id: (states.accountList.length + 1).toString(),
+      })
+      if (response.status === 201) {
+        console.log('response 201')
+        successCallback()
+      }
+    } catch (error) {
+      console.error('putCurrentAccount Error', error)
+    }
+  }
+
+  const postUserAccountId = async (successCallback = () => {}) => {
+    try {
+      const response = await axios.post(`${USER_ACCOUNT_URL}`, {
+        id: (states.userAccountList.length + 1).toString(),
+        userId: user.value.id,
+        accountId: (states.accountList.length + 1).toString(),
+      })
+      if (response.status === 201) {
+        console.log('response 201')
+        successCallback()
+      }
+    } catch (error) {
+      console.error('putCurrentAccount Error', error)
+    }
+  }
+
   const putUserBalance = async (balance, successCallback = () => {}) => {
     try {
       console.log({
@@ -341,12 +375,14 @@ export const useMoaStore = defineStore('moa', () => {
     fetchUserLedgerList,
     fetchUserAccountList,
     loadUserFromLocalStorage,
+    postUserAccountId,
     logout,
     updateUser,
     deleteUser,
     fetchEntrieList,
     putCurrentAccount,
     putUserBalance,
+    postUserAccount,
     getMyAccountList,
     getMyLedgerList,
     user,

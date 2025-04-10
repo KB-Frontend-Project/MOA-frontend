@@ -2,14 +2,14 @@
   "users": [
     {
       "id": "1",
-      "name": "홍길동",
+      "name": "모찌",
       "email": "hong",
       "password": "password123",
       "image": "profile1.jpg",
       "createdAt": "2023-01-15",
       "alert": true,
       "shake_unit": 5,
-      "balance": 91184
+      "balance": 91172
     },
     {
       "id": "2",
@@ -99,6 +99,12 @@
       "bank": "국민은행",
       "accountNumber": "123456-78-654321",
       "balance": 100000000
+    },
+    {
+      "id": "4",
+      "bank": "국민은행",
+      "accountNumber": "123123-12-321323",
+      "balance": 0
     }
   ],
   "user_ledgers": [
@@ -143,6 +149,11 @@
       "id": "4",
       "userId": "2",
       "accountId": "3"
+    },
+    {
+      "id": "5",
+      "userId": "1",
+      "accountId": "4"
     }
   ],
   "entries": [
