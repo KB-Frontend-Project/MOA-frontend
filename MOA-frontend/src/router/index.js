@@ -8,6 +8,7 @@ import LedgerDetailPage from '@/pages/LedgerDetailPage.vue'
 import CalendarPage from '@/pages/CalendarPage.vue'
 import InputLedgerPage from '@/pages/InputLedgerPage.vue'
 import ResetPasswordPage from '@/pages/ResetPasswordPage.vue'
+import AccountLinking from '@/pages/AccountLinking.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -66,6 +67,12 @@ const router = createRouter({
       name: 'password',
       component: ResetPasswordPage,
       meta: { requiresAuth: true, noSideBar: true },
+    },
+    {
+      path: '/account',
+      name: 'account',
+      component: AccountLinking,
+      meta: { requiresAuth: true },
     },
     {
       path: '/:pathMatch(.*)*',
