@@ -38,6 +38,13 @@
       </div>
     </div>
     <div class="sidebar-content">
+      <div class="sidebar-title">
+        <router-link :class="{ 'current-page': path[1] === 'accountlinking' }" to="/accountlinking"
+          >연동 계좌 확인</router-link
+        >
+      </div>
+    </div>
+    <div class="sidebar-content">
       <div class="sidebar-sublist last-item">
         <router-link
           :class="{ 'current-page': path[1] === 'profile' }"

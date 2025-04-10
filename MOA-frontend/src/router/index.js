@@ -7,6 +7,7 @@ import StatisticsPage from '@/pages/StatisticsPage.vue'
 import LedgerDetailPage from '@/pages/LedgerDetailPage.vue'
 import CalendarPage from '@/pages/CalendarPage.vue'
 import InputLedgerPage from '@/pages/InputLedgerPage.vue'
+import AccountLinking from '@/pages/AccountLinking.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -58,6 +59,12 @@ const router = createRouter({
       path: '/ledger/input',
       name: 'input-ledger',
       component: InputLedgerPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/accountlinking',
+      name: 'accountlinking',
+      component: AccountLinking,
       meta: { requiresAuth: true },
     },
     {
