@@ -20,9 +20,9 @@ import { ref, watchEffect } from 'vue'
 const props = defineProps({
   _isActive: { type: String, required: true },
   _text: { type: String, required: true },
-  _textSize: { type: String, required: true },
-  _w: { type: String, required: true },
-  _h: { type: String, required: true },
+  _textSize: { type: String, required: false },
+  _w: { type: String, required: false },
+  _h: { type: String, required: false },
   _type: { type: String, required: true },
   _mp: { type: String, required: false },
 })
