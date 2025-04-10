@@ -46,7 +46,7 @@ import { ref, computed } from 'vue'
 import { useMoaStore } from '@/stores/moaStore.js'
 
 const moaStore = useMoaStore()
-const { putCurrentAccount } = moaStore
+const { putCurrentAccount, putUserBalance, user } = moaStore
 
 const title = ref('통장 흔들기')
 const message = ref('')
@@ -63,18 +63,17 @@ const closeTrigger = () => {
   console.log('작동')
 }
 
-const savings = ref(0) // 저금통 금액
 const isShaking = ref(false)
 const coins = ref([])
 let coinIdCounter = 0
 
 // 금액 포맷팅 함수
 const formattedBalance = computed(() => {
-  return parseInt(props.selectedAccount.balance).toLocaleString()
+  return props.selectedAccount.balance.toLocaleString()
 })
 
 const formattedSavings = computed(() => {
-  return savings.value.toLocaleString()
+  return user.balance.toLocaleString()
 })
 
 // 통장 흔들기 기능
@@ -95,11 +94,14 @@ const shakeBank = async () => {
     createCoinAnimation(changeAmount)
 
     // 애니메이션 후 저금통에 돈 추가 (2초 후)
-    setTimeout(() => {
-      savings.value += changeAmount
-      isShaking.value = false
-      coins.value = []
-    }, 2000)
+    return new Promise(resolve => {
+      setTimeout(() => {
+        user.balance += changeAmount
+        isShaking.value = false
+        coins.value = []
+        resolve() // Promise 완료 신호
+      }, 2000)
+    })
   } else {
     // 10원 단위가 없을 경우
     isShaking.value = false
@@ -134,6 +136,7 @@ const createCoinAnimation = totalAmount => {
 const handleShakeBank = async () => {
   await shakeBank()
   await putCurrentAccount(props.selectedAccount)
+  await putUserBalance(user.balance)
 }
 </script>
 

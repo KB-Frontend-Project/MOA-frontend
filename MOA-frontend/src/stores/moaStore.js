@@ -13,8 +13,18 @@ export const useMoaStore = defineStore('moa', () => {
     accountList: [],
   })
 
-  const user = ref(null)
-  const isDarkMode = ref(false)
+  //테스트용 더미
+  const user = ref({
+    id: '1',
+    name: '홍길동',
+    email: 'hong',
+    password: 'password123',
+    image: 'profile1.jpg',
+    createdAt: '2023-01-15',
+    alert: true,
+    shake_unit: 5,
+    balance: 91172,
+  })
 
   const ENTRIES_URL = '/api/entries'
   const LEDGERS_URL = '/api/ledgers'
@@ -189,6 +199,25 @@ export const useMoaStore = defineStore('moa', () => {
     }
   }
 
+  const putUserBalance = async (balance, successCallback = () => {}) => {
+    try {
+      console.log({
+        ...user.value,
+        balance: balance,
+      })
+      const response = await axios.put(`${USERS_URL}/${user.value.id}`, {
+        ...user.value,
+        balance: balance,
+      })
+      if (response.status === 200) {
+        console.log('response 200')
+        successCallback()
+      }
+    } catch (error) {
+      console.error('putCurrentAccount Error', error)
+    }
+  }
+
   const putCurrentAccount = async (account, successCallback = () => {}) => {
     try {
       const response = await axios.put(`${ACCOUNT_URL}/${account.id}`, account)
@@ -199,11 +228,6 @@ export const useMoaStore = defineStore('moa', () => {
     } catch (error) {
       console.error('putCurrentAccount Error', error)
     }
-  }
-
-  const putUserBalance = async (balance) = {
-
-  
   }
 
   const getMyLedgerList = computed(() => {
@@ -218,9 +242,7 @@ export const useMoaStore = defineStore('moa', () => {
       .map(item => item.ledgerId)
     //결과 : [1, 2, ...]
 
-    const myLedgerList = states.ledgerList.filter(ledger =>
-      myLedgerIdList.includes(parseInt(ledger.id))
-    )
+    const myLedgerList = states.ledgerList.filter(ledger => myLedgerIdList.includes(ledger.id))
 
     return myLedgerList
   })
@@ -292,18 +314,15 @@ export const useMoaStore = defineStore('moa', () => {
 
   const getMyAccountList = computed(() => {
     //추후에 유저.id를 filter하도록 변경해야함
-    const user = { id: 1 }
     const myAccountIdList = states.userAccountList
       .filter(item => {
-        if (item.userId === user.id) {
+        if (item.userId === user.value.id) {
           return item.accountId
         }
       })
       .map(item => item.accountId)
 
-    const myAccountList = states.accountList.filter(account =>
-      myAccountIdList.includes(parseInt(account.id))
-    )
+    const myAccountList = states.accountList.filter(account => myAccountIdList.includes(account.id))
     return myAccountList
   })
 
@@ -327,6 +346,7 @@ export const useMoaStore = defineStore('moa', () => {
     deleteUser,
     fetchEntrieList,
     putCurrentAccount,
+    putUserBalance,
     getMyAccountList,
     getMyLedgerList,
     user,
