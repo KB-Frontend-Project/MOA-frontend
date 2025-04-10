@@ -14,7 +14,7 @@
           <div class="piggy-bank">
             <h2>저금통</h2>
             <div class="piggy-container">
-              <div class="piggy-image"></div>
+              <div :class="{ 'piggy-image': true, finished: !isShaking }"></div>
               <p class="savings">{{ formattedSavings }}원</p>
             </div>
           </div>
@@ -43,7 +43,6 @@
 <script setup>
 import BaseModal from '@/components/common/BaseModal.vue'
 import BaseButton from '@/components/common/BaseButton.vue'
-import BaseInput from '@/components/common/BaseInput.vue'
 import { onMounted, ref, computed } from 'vue'
 import { useMoaStore } from '@/stores/moaStore.js'
 
@@ -60,8 +59,8 @@ onMounted(async () => {
 
 const title = ref('통장 흔들기')
 const message = ref('')
-
 const show = ref(true) // slot 보이기 여부
+const shakeUnit = ref(10)
 
 const props = defineProps({
   shakePopup: {
@@ -113,6 +112,7 @@ const shakeBank = async () => {
     setTimeout(() => {
       savings.value += changeAmount
       isShaking.value = false
+      coins.value = []
     }, 2000)
   } else {
     // 10원 단위가 없을 경우
@@ -223,6 +223,10 @@ const createCoinAnimation = totalAmount => {
   background-image: url('/src/assets/shakeImage.png');
   background-size: contain;
   background-position: center;
+}
+
+.piggy-image.finished {
+  background-image: url('/src/assets/shakeFinishedImage.png');
 }
 
 .coin-slot {
