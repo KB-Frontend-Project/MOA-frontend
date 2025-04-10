@@ -3,13 +3,14 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 
 export const useMoaStore = defineStore('moa', () => {
-
   // entrieList(가계부 항목) 외에 다른 컬렉션들도 담기 가능
   const states = reactive({
     entrieList: [],
     ledgerList: [],
     userList: [],
     userLedgerList: [],
+    userAccountList: [],
+    accountList: [],
   })
 
   const user = ref(null)
@@ -19,6 +20,8 @@ export const useMoaStore = defineStore('moa', () => {
   const LEDGERS_URL = '/api/ledgers'
   const USERS_URL = '/api/users'
   const USER_LEDGERS_URL = '/api/user_ledgers'
+  const ACCOUNT_URL = '/api/accounts'
+  const USER_ACCOUNT_URL = '/api/user_accounts'
 
   function toggleDarkMode() {
     isDarkMode.value = !isDarkMode.value
@@ -43,7 +46,7 @@ export const useMoaStore = defineStore('moa', () => {
       console.log('에러 발생:', error)
     }
   }
-  
+
   /**
    * 4) Ledgers / Users / UserLedgers 가져오기 (확장 예시)
    *    - 필요하다면 각 컬렉션도 불러와서 사용 가능합니다.
@@ -72,6 +75,18 @@ export const useMoaStore = defineStore('moa', () => {
     }
   }
 
+  const fetchAccountList = async () => {
+    try {
+      const res = await axios.get(ACCOUNT_URL)
+      if (res.status === 200) {
+        states.accountList = res.data
+        console.log('accountList:', states.accountList)
+      }
+    } catch (err) {
+      console.error('fetchUserList 에러:', err)
+    }
+  }
+
   const fetchUserLedgerList = async () => {
     try {
       const res = await axios.get(USER_LEDGERS_URL)
@@ -84,12 +99,24 @@ export const useMoaStore = defineStore('moa', () => {
     }
   }
 
-  const signup = async (newUser) => {
+  const fetchUserAccountList = async () => {
+    try {
+      const res = await axios.get(USER_ACCOUNT_URL)
+      if (res.status === 200) {
+        states.userAccountList = res.data
+        console.log('userAccountList:', states.userAccountList)
+      }
+    } catch (err) {
+      console.error('fetchUserLedgerList 에러:', err)
+    }
+  }
+
+  const signup = async newUser => {
     try {
       const res = await fetch('http://localhost:3000/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newUser)
+        body: JSON.stringify(newUser),
       })
       if (!res.ok) throw new Error('회원가입 실패')
       const result = await res.json()
@@ -128,13 +155,13 @@ export const useMoaStore = defineStore('moa', () => {
     user.value = null
     localStorage.removeItem('moa-user')
   }
-  
+
   const updateUser = async (id, data) => {
     try {
       const res = await fetch(`http://localhost:3000/users/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       })
       if (!res.ok) throw new Error('업데이트 실패')
       const updated = await res.json()
@@ -147,10 +174,10 @@ export const useMoaStore = defineStore('moa', () => {
     }
   }
 
-  const deleteUser = async (id) => {
+  const deleteUser = async id => {
     try {
       const res = await fetch(`http://localhost:3000/users/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       })
       if (!res.ok) throw new Error('삭제 실패')
       user.value = null
@@ -184,6 +211,66 @@ export const useMoaStore = defineStore('moa', () => {
     return sortedMonthlySpending
   })
 
+  const getWeeklySpending = computed(() => {
+    const weeklySpending = []
+    const today = new Date()
+    const month = today.getMonth() + 1
+    const year = today.getFullYear()
+
+    for (let i = 0; i < 4; i++) {
+      weeklySpending.push({
+        withDraw: 0,
+        income: 0,
+      })
+    }
+    states.entrieList.forEach(entry => {
+      const entryDate = new Date(entry.when)
+      const entryDay = entryDate.getDate()
+      const entryMonth = entryDate.getMonth() + 1
+      const entryYear = entryDate.getFullYear()
+
+      if (entryMonth === month && entryYear === year) {
+        let index = Math.min(3, Math.floor((entryDay - 1) / 7))
+
+        if (entry.isWithDraw) {
+          weeklySpending[index].withDraw += entry.amount
+        } else {
+          weeklySpending[index].income += entry.amount
+        }
+      }
+    })
+    return weeklySpending
+  })
+
+  const getCategorySpending = computed(() => {
+    const categorySpending = { 식비: 0, 교통: 0, 쇼핑: 0, 문화: 0 }
+
+    states.entrieList.forEach(entry => {
+      if (entry.isWithDraw) {
+        categorySpending[entry.category] += entry.amount
+      }
+    })
+
+    return categorySpending
+  })
+
+  const getMyAccountList = computed(() => {
+    //추후에 유저.id를 filter하도록 변경해야함
+    const user = { id: 1 }
+    const myAccountIdList = states.userAccountList
+      .filter(item => {
+        if (item.userId === user.id) {
+          return item.accountId
+        }
+      })
+      .map(item => item.accountId)
+
+    const myAccountList = states.accountList.filter(account =>
+      myAccountIdList.includes(parseInt(account.id))
+    )
+    return myAccountList
+  })
+
   return {
     user,
     toggleDarkMode,
@@ -195,11 +282,22 @@ export const useMoaStore = defineStore('moa', () => {
     fetchEntrieList,
     fetchLedgerList,
     fetchUserList,
+    fetchAccountList,
     fetchUserLedgerList,
+    fetchUserAccountList,
     loadUserFromLocalStorage,
     logout,
     updateUser,
     deleteUser,
-    getMonthlySpending
+    fetchEntrieList,
+    getMyAccountList,
+    getMyLedgerList,
+    user,
+    categoryWithdraw,
+    categoryIncome,
+    getMonthlySpending,
+    getWeeklySpending,
+    getCategorySpending,
+    getMonthlySpending,
   }
 })
