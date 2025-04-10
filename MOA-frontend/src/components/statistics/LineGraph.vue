@@ -1,5 +1,5 @@
 <template>
-  <div><Line :data="chartData" :options="chartOptions" /></div>
+  <Line :data="chartData" :options="chartOptions" />
 </template>
 
 <script setup>
@@ -14,11 +14,11 @@ import {
   PointElement,
   LineElement,
 } from 'chart.js'
+import { toRef } from 'vue'
 
 ChartJS.register(Title, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement)
 
-defineProps({
-  chartData: Object,
-  chartOptions: Object,
-})
+const props = defineProps(['chartData', 'chartOptions'])
+const chartData = toRef(props, 'chartData')
+const chartOptions = toRef(props, 'chartOptions')
 </script>
