@@ -14,7 +14,6 @@ export const useMoaStore = defineStore('moa', () => {
 
   const user = ref(null)
   const isDarkMode = ref(false)
-  const isDarkMode = ref(false)
 
   const ENTRIES_URL = '/api/entries'
   const LEDGERS_URL = '/api/ledgers'
@@ -44,7 +43,7 @@ export const useMoaStore = defineStore('moa', () => {
       console.log('에러 발생:', error)
     }
   }
-
+  
   /**
    * 4) Ledgers / Users / UserLedgers 가져오기 (확장 예시)
    *    - 필요하다면 각 컬렉션도 불러와서 사용 가능합니다.
