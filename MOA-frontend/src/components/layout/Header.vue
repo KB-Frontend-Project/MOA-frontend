@@ -60,6 +60,7 @@
 
   <Teleport to="#modal">
     <InputLedgerPopup :ledgerPopup="ledgerPopup" @closetrigger="closeLedgerPopup" />
+    <ShakeBalance :shakePopup="shakePopup" @closeTrigger="closeShakePopup" />
   </Teleport>
 </template>
 
@@ -67,10 +68,16 @@
 import { ref, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import InputLedgerPopup from '@/pages/InputLedgerPopup.vue'
+import ShakeBalance from '@/pages/ShakeBalance.vue'
 
 const menuOpen = ref(false)
 const alertOpen = ref(false)
 const ledgerPopup = ref(false)
+const shakePopup = ref(false)
+
+const closeShakePopup = () => {
+  shakePopup.value = false
+}
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value
@@ -103,6 +110,12 @@ const unreadCount = computed(() => {
 const openSharedLedger = () => {
   console.log('공동 가계부 생성')
   menuOpen.value = false
+}
+
+const openShakePiggyBank = () => {
+  console.log('통장 흔들기')
+  menuOpen.value = false
+  shakePopup.value = true
 }
 
 const openTransactionPopup = () => {
