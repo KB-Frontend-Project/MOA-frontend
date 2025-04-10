@@ -22,6 +22,12 @@ export const useMoaStore = defineStore('moa', () => {
 
   function toggleDarkMode() {
     isDarkMode.value = !isDarkMode.value
+    localStorage.setItem('darkMode', isDarkMode.value)
+  }
+
+  const initDarkMode = () => {
+    const stored = localStorage.getItem('darkMode')
+    if (stored !== null) isDarkMode.value = stored === 'true'
   }
 
   const fetchEntrieList = async () => {
@@ -182,6 +188,7 @@ export const useMoaStore = defineStore('moa', () => {
     user,
     toggleDarkMode,
     isDarkMode,
+    initDarkMode,
     states,
     signup,
     login,

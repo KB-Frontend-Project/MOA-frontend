@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 import BaseModal from './components/common/BaseModal.vue'
@@ -33,6 +33,10 @@ const isDarkMode = computed(() => store.isDarkMode)
 const toggleModal = () => {
   isModalOpen.value = !isModalOpen.value
 }
+
+onMounted(() => {
+  store.initDarkMode()
+})
 </script>
 
 <style scoped>
@@ -54,10 +58,25 @@ const toggleModal = () => {
   overflow: hidden;
 }
 
-.app-wrapper.dark-mode {
-  /* 다크모드 */
-  background: #222;
+.dark-mode {
+  background-color: #1e1e1e;
   color: #eee;
 }
 
+.dark-mode .bg-light {
+  background-color: #2b2b2b !important;
+}
+.dark-mode .text-dark {
+  color: #eee !important;
+}
+.dark-mode .form-control {
+  background-color: #3a3a3a;
+  color: #eee;
+  border-color: #555;
+}
+.dark-mode .card {
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+  border: 1px solid #444;
+}
 </style>

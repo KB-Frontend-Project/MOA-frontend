@@ -75,4 +75,19 @@ input::placeholder {
   border-color: #43b581;
   box-shadow: 0px 0px 10px -2px #fff;
 }
+
+.dark-mode input {
+  background-color: #2c2c2c !important;
+  border-color: #666 !important;
+  color: #eee !important;
+}
+
+.dark-mode input::placeholder {
+  color: #999;
+}
+
+.dark-mode .form-control:focus {
+  border-color: #80cbc4;
+  box-shadow: 0 0 8px rgba(128, 203, 196, 0.6);
+}
 </style>

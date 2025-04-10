@@ -1,13 +1,12 @@
 <template>
-  <div class="signup-page">
+  <div class="signup-page" :class="{ 'dark-mode': isDarkMode }">
     <div class="signup-container">
-      <img src="@/assets/signup.png" alt="signup" class="signup-img" />
+      <img :src="signupImg" alt="signup" class="signup-img" />
 
       <BaseInput v-model="email" _type="text" _ph="이메일" _w="100" />
       <BaseInput v-model="password" _type="password" _ph="비밀번호" _w="100" />
       <BaseInput v-model="confirmPassword" _type="password" _ph="비밀번호 확인" _w="100" />
 
-      
       <BaseButton
         _isActive="true"
         _text="가입"
@@ -29,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useMoaStore } from '@/stores/moaStore'
 import Header from '@/components/layout/Header.vue';
 import BaseInput from '@/components/common/BaseInput.vue';
@@ -37,8 +36,13 @@ import BaseButton from '@/components/common/BaseButton.vue';
 import BaseModal from '@/components/common/BaseModal.vue';
 import { useRouter } from 'vue-router';
 
+import signupLight from '@/assets/signup-light.png'
+import signupDark from '@/assets/signup-dark.png'
+
 const store = useMoaStore()
 const router = useRouter() 
+const isDarkMode = computed(() => store.isDarkMode)
+const signupImg = computed(() => isDarkMode.value ? signupDark : signupLight)
 
 // v-model용 값
 const email = ref('')
