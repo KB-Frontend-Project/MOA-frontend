@@ -18,11 +18,11 @@
     <hr />
 
     <!-- 은행 정보 리스트 -->
-    <div v-for="(account, idx) in accounts" :key="idx" class="mb-4">
+    <div v-for="(account, idx) in getMyAccountList" :key="idx" class="mb-4">
       <div class="d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center gap-3 fs-5 fw-semibold">
           <div>{{ account.bank }}</div>
-          <div>{{ account.number }}</div>
+          <div>{{ account.accountNumber }}</div>
         </div>
 
         <div class="d-flex gap-2">
@@ -80,10 +80,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import BaseButton from '@/components/common/BaseButton.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
 import ShakeBalance from './ShakeBalance.vue'
+import { useMoaStore } from '@/stores/moaStore.js'
+
+const moaStore = useMoaStore()
+
+const { fetchAccountList, fetchUserAccountList } = moaStore
+const getMyAccountList = computed(() => moaStore.getMyAccountList)
 
 const accounts = ref([{ bank: '국민은행', number: '652321-43-231232' }])
 const name = ref('모찌')
@@ -139,6 +145,12 @@ const formatAccountNumber = e => {
 
   newNumber.value = formatted
 }
+
+onMounted(async () => {
+  console.log('asdf')
+  await fetchAccountList()
+  await fetchUserAccountList()
+})
 </script>
 
 <style scoped>
