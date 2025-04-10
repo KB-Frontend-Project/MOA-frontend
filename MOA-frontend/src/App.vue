@@ -1,5 +1,6 @@
 <template>
   <div :class="{ 'dark-mode': isDarkMode }" class="app-wrapper">
+  <div :class="{ 'dark-mode': isDarkMode }" class="app-wrapper">
     <Header v-if="!noHeader" />
     <div class="layout">
       <SideBar v-if="!noSideBar" />
@@ -23,12 +24,15 @@ import LoginPage from './pages/LoginPage.vue'
 import HomePage from './pages/HomePage.vue'
 import ResetPasswordPage from './pages/ResetPasswordPage.vue'
 import { useMoaStore } from '@/stores/moaStore'
+import { useMoaStore } from '@/stores/moaStore'
 
 const route = useRoute()
+const store = useMoaStore()
 const store = useMoaStore()
 const isModalOpen = ref(false)
 const noHeader = computed(() => route.meta.noHeader)
 const noSideBar = computed(() => route.meta.noSideBar)
+const isDarkMode = computed(() => store.isDarkMode)
 const isDarkMode = computed(() => store.isDarkMode)
 const toggleModal = () => {
   isModalOpen.value = !isModalOpen.value
@@ -79,4 +83,10 @@ onMounted(() => {
   color: #f0f0f0;
   border: 1px solid #444;
 }
+.app-wrapper.dark-mode {
+  /* 다크모드 */
+  background: #222;
+  color: #eee;
+}
+
 </style>
