@@ -9,6 +9,14 @@
     </div>
 
     <div class="ms-auto d-flex align-items-center gap-3 position-relative">
+      <label class="switch">
+        <input type="checkbox" v-model="isDarkMode" />
+        <span class="slider round">
+          <span class="icon moon">🌙</span>
+          <span class="icon sun">☀️</span>
+        </span>
+      </label>
+
       <!-- 종 아이콘 + 뱃지 -->
       <div class="position-relative" @click="toggleAlert" style="cursor: pointer">
         <svg
@@ -79,8 +87,9 @@ const menuOpen = ref(false)
 const alertOpen = ref(false)
 const ledgerPopup = ref(false)
 const shakePopup = ref(false)
-const store = useMoaStore()
-const isdDarkMode = computed(() => store.isDarkMode)
+const toggleDarkMode = () => {
+  store.toggleDarkMode()
+}
 
 const closeShakePopup = () => {
   shakePopup.value = false
@@ -95,6 +104,12 @@ const toggleAlert = () => {
   alertOpen.value = !alertOpen.value
   menuOpen.value = false
 }
+
+const store = useMoaStore()
+const isDarkMode = computed({
+  get: () => store.isDarkMode,
+  set: () => store.toggleDarkMode()
+})
 
 // 알림 관련
 const notificationList = ref([
@@ -230,4 +245,138 @@ const closeLedgerPopup = () => {
   color: #999;
   font-style: italic;
 }
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 24px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.slider::before {
+  position: absolute;
+  content: '';
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #a5d6a7;
+}
+input:checked + .slider::before {
+  transform: translateX(24px);
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 26px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  background-color: #ccc;
+  border-radius: 34px;
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  transition: 0.4s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px;
+  font-size: 14px;
+}
+.slider::before {
+  content: '';
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 4px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+/* 슬라이더 위치 오른쪽으로 */
+input:checked + .slider::before {
+  transform: translateX(28px);
+}
+
+/* 달 기본 강조 */
+.moon {
+  opacity: 1;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.sun {
+  opacity: 0.5;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* 해 강조 (light mode) */
+input:not(:checked) + .slider .moon {
+  opacity: 0.5;
+}
+input:not(:checked) + .slider .sun {
+  opacity: 1;
+}
+
+.dark-mode header {
+  background-color: #2b2b2b !important;
+  color: #fff !important;
+}
+
+.dark-mode .navbar-brand,
+.dark-mode .text-dark,
+.dark-mode .notification-item,
+.dark-mode .hover-bg,
+.dark-mode .notification-item.read {
+  color: #f1f1f1 !important;
+}
+
+.dark-mode .notification-item.read {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.dark-mode .hover-bg:hover {
+  background-color: #3a3a3a;
+}
+
+/* 드롭다운 다크모드 대응 */
+.dark-mode .position-absolute.bg-white {
+  background-color: #2b2b2b !important; /* 어두운 배경 */
+  color: #f0f0f0 !important; /* 밝은 텍스트 */
+  border-color: #444;
+}
+
+/* 각 메뉴 아이템 hover 시 색상 */
+.dark-mode .hover-bg:hover {
+  background-color: #3a3a3a;
+  color: #ffffff;
+}
+
 </style>
