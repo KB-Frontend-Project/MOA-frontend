@@ -25,7 +25,7 @@
           <span>메모</span>
         </div>
         <div class="item-list-container">
-          <div v-for="item in inputList" class="input-item">
+          <div v-for="(item, index) in inputList" class="input-item">
             <select class="input-select" v-model="item.isWithDraw" name="isWithDraw" required>
               <option :value="true">지출</option>
               <option :value="false">수입</option>
@@ -40,6 +40,15 @@
             <BaseInput v-model="item.where" _type="text" required />
             <BaseInput v-model.number="item.amount" _type="amount" required />
             <BaseInput v-model="item.desc" _type="text" required />
+            <div class="delete-button-container">
+              <BaseButton
+                v-if="index > 0"
+                @click="handleDeleteInputItem(index)"
+                _type="borderline"
+                _text="-"
+                class="delete-item"
+              />
+            </div>
           </div>
           <div class="add-button-container">
             <BaseButton
@@ -130,6 +139,10 @@ const handleAddInputItem = () => {
   })
 }
 
+const handleDeleteInputItem = index => {
+  inputList.value.splice(index, 1)
+}
+
 const resetLedgerInput = () => {
   inputList.value = [
     {
@@ -207,7 +220,7 @@ select {
 }
 .input-item {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr 2fr 1.5fr 2.5fr;
+  grid-template-columns: 1fr 2fr 1fr 2fr 1.5fr 2fr 0.5fr;
   grid-template-rows: 2.5rem;
   gap: 1rem;
 }
@@ -222,10 +235,24 @@ select {
   font-size: 0.9rem;
   color: #55b4a1;
 }
+.delete-button-container {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
 .add-item {
   width: 1.6rem;
   height: 1.6rem;
   border-radius: 50%;
   margin-left: 0;
+}
+.delete-item {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  margin-left: 0;
+  border-color: #f04747;
+  color: #f04747;
 }
 </style>
