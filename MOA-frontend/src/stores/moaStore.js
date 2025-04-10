@@ -3,6 +3,10 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 
 export const useMoaStore = defineStore('moa', () => {
+  const BASEURI = '/api/entries'
+  const states = ref({ entrieList: [] })
+  const categoryWithdraw = ['식비', '교통', '쇼핑', ' 문화']
+  const categoryIncome = ['급여', '기타']
 
   // entrieList(가계부 항목) 외에 다른 컬렉션들도 담기 가능
   const states = reactive({
@@ -32,7 +36,7 @@ export const useMoaStore = defineStore('moa', () => {
       console.log('에러 발생:', error)
     }
   }
-  
+
   /**
    * 4) Ledgers / Users / UserLedgers 가져오기 (확장 예시)
    *    - 필요하다면 각 컬렉션도 불러와서 사용 가능합니다.
@@ -229,6 +233,13 @@ export const useMoaStore = defineStore('moa', () => {
     logout,
     updateUser,
     deleteUser,
-    getMonthlySpending
+    fetchEntrieList,
+    user,
+    categoryWithdraw,
+    categoryIncome,
+    getMonthlySpending,
+    getWeeklySpending,
+    getCategorySpending,
+    getMonthlySpending,
   }
 })
