@@ -1,8 +1,5 @@
 <template>
-  <Header />
   <div class="setting-page">
-    <SideBar />
-
     <div class="content">
       <!-- 프로필 상단 -->
       <div class="profile-box">

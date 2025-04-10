@@ -41,15 +41,16 @@ const toggleModal = () => {
   flex-direction: column;
   height: 100vh;
 }
-.app-wrapper {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
 
 .router-view {
   flex: 1;
   padding: 1rem;
   overflow-y: auto;
+}
+
+.layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
 }
 </style>

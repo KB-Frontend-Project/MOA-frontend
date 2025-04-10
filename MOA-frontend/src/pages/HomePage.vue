@@ -1,9 +1,6 @@
 <template>
   <div class="main-page">
-    <Header />
     <div class="page-body">
-      <SideBar />
-
       <div class="dashboard">
         <!-- 상단 요약 및 거래 -->
         <section class="summary-section">
