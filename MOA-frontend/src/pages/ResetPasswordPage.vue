@@ -148,21 +148,28 @@ const handleChangePassword = async () => {
   if (newPassword.value !== confirmPassword.value) {
     openModal('오류', '비밀번호가 일치하지 않습니다.')
     return
-  }
+  } 
+
   console.log('비밀번호 변경(가정) :', newPassword.value, confirmPassword.value)
-  openModal('완료', '비밀번호가 변경되었습니다.')
+
+  openModal('완료', '비밀번호가 변경되었습니다.', true)
 }
 
+const shouldRedirectToLogin = ref(false)
+
 // ------------------ 모달 관련 메서드 ------------------
-function openModal(title, message) {
+function openModal(title, message, redirect = false) {
   modalTitle.value = title
   modalMessage.value = message
   showModal.value = true
+  shouldRedirectToLogin.value = redirect
 }
 
 function handleModalClose() {
   showModal.value = false
-  router.push('/login')
+  if (shouldRedirectToLogin.value) {
+    router.push('/login')
+  }
 }
 </script>
 
