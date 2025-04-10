@@ -18,7 +18,7 @@
 
       <div class="login-footer">
         <!-- 비밀번호 찾기 미구현 -->
-        <a href="#" class="footer-link">비밀번호 찾기</a> 
+        <a href="http://localhost:5173/password" class="footer-link">비밀번호 찾기</a> 
         <a href="http://localhost:5173/signup" class="footer-link">회원가입</a>
       </div>
     </div>
