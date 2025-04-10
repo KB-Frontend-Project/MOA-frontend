@@ -9,7 +9,7 @@
 
     <div class="ms-auto d-flex align-items-center gap-3 position-relative">
       <!-- ✅ 종 아이콘 + 뱃지 -->
-      <div class="position-relative" @click="toggleAlert" style="cursor: pointer;">
+      <div class="position-relative" @click="toggleAlert" style="cursor: pointer">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           height="26"
@@ -58,14 +58,20 @@
 
     <div class="header-underline"></div>
   </header>
+
+  <Teleport to="#modal">
+    <InputLedgerPopup :ledgerPopup="ledgerPopup" @closetrigger="closeLedgerPopup" />
+  </Teleport>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import { RouterLink } from 'vue-router'
+import InputLedgerPopup from '@/pages/InputLedgerPopup.vue'
 
 const menuOpen = ref(false)
 const alertOpen = ref(false)
+const ledgerPopup = ref(false)
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value
@@ -81,12 +87,12 @@ const toggleAlert = () => {
 const notificationList = ref([
   '내일은 국민카드 결제일입니다!',
   '3일후에 넷플릭스(고정지출) 14,900원 결제됩니다!',
-  '모아찌와 통장을 흔들어 돈을 모아보세요!'
+  '모아찌와 통장을 흔들어 돈을 모아보세요!',
 ])
 
 const readNotifications = ref(new Set())
 
-const markAsRead = (index) => {
+const markAsRead = index => {
   readNotifications.value.add(index)
 }
 
@@ -108,6 +114,10 @@ const openShakePiggyBank = () => {
 const openTransactionPopup = () => {
   console.log('거래 내역 작성 팝업 열기')
   menuOpen.value = false
+  ledgerPopup.value = true
+}
+const closeLedgerPopup = () => {
+  ledgerPopup.value = false
 }
 </script>
 

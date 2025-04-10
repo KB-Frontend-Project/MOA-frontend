@@ -7,6 +7,7 @@
       </div>
       <div class="card-body p-4">
         {{ message }}
+        <slot name="ledgerPopup"></slot>
       </div>
     </div>
   </div>
