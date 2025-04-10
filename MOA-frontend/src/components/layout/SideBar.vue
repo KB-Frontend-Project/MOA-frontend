@@ -77,6 +77,15 @@ console.log(path)
   width: 14.5rem;
   height: inherit;
 }
+
+.dark-mode .sidebar {
+  background-color: #1e1e1e !important;
+}
+.dark-mode .sidebar a {
+  color: white !important;
+}
+
+
 .sidebar-profile {
   width: 5rem;
   height: 5rem;
