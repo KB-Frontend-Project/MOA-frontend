@@ -32,10 +32,12 @@
             </select>
             <BaseInput class="base-input" v-model="item.when" _type="date" required />
             <select class="input-select" v-model="item.category" name="category" required>
-              <option value="식비">식비</option>
-              <option value="교통">교통</option>
-              <option value="쇼핑">쇼핑</option>
-              <option value="문화">문화</option>
+              <option v-if="item.isWithDraw" v-for="c in categoryWithdraw" :value="c">
+                {{ c }}
+              </option>
+              <option v-if="!item.isWithDraw" v-for="c in categoryIncome" :value="c">
+                {{ c }}
+              </option>
             </select>
             <BaseInput v-model="item.where" _type="text" required />
             <BaseInput v-model.number="item.amount" _type="amount" required />
@@ -73,11 +75,14 @@
 <script setup>
 import BaseButton from '@/components/common/BaseButton.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
+import { useMoaStore } from '@/stores/moaStore.js'
 import { useMoaStoreForInput } from '@/stores/moaStoreForInput.js'
 import { computed, ref } from 'vue'
 
 const moaStoreForInput = useMoaStoreForInput()
+const moaStore = useMoaStore()
 const { fetchLedgerInput } = moaStoreForInput
+const { categoryWithdraw, categoryIncome } = moaStore
 
 const selectedLedgerId = ref(1)
 const today = computed(() => {
