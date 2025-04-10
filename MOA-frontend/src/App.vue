@@ -22,7 +22,7 @@ import SignUpPage from './pages/SignUpPage.vue'
 import ProfileSettingPage from './pages/ProfileSettingPage.vue'
 import LoginPage from './pages/LoginPage.vue'
 import HomePage from './pages/HomePage.vue'
-import RessetPasswordPage from './pages/RessetPasswordPage.vue'
+import ResetPasswordPage from './pages/ResetPasswordPage.vue'
 
 const route = useRoute()
 
