@@ -89,14 +89,8 @@ import { useMoaStore } from '@/stores/moaStore.js'
 
 const moaStore = useMoaStore()
 
-const {
-  fetchAccountList,
-  fetchUserAccountList,
-  postUserAccount,
-  postUserAccountId,
-  deleteUserAccount,
-  user,
-} = moaStore
+const { fetchAccountList, fetchUserAccountList, postUserAccount, deleteUserAccount, user } =
+  moaStore
 const getMyAccountList = computed(() => moaStore.getMyAccountList)
 
 const selectedAccount = ref({})
@@ -120,7 +114,8 @@ const openShakePiggyBank = account => {
 const addAccount = async () => {
   if (newBank.value.trim() && newNumber.value.trim()) {
     await postUserAccount({ bank: newBank.value, accountNumber: newNumber.value, balance: 0 })
-    await postUserAccountId()
+    await fetchAccountList()
+    await fetchUserAccountList()
     newBank.value = ''
     newNumber.value = ''
     showAddAccount.value = false
@@ -132,6 +127,7 @@ const addAccount = async () => {
 const unlinkAccount = async idx => {
   if (confirm('삭제하시겠습니까?')) {
     await deleteUserAccount(idx)
+    await fetchAccountList()
   }
 }
 
