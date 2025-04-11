@@ -83,10 +83,10 @@ import BaseButton from '@/components/common/BaseButton.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
 import { onMounted, ref, reactive, computed } from 'vue'
 import axios from 'axios'
-import { useMoaStoreForInput } from '@/stores/moaStoreForInput.js'
+import { useMoaStore } from '@/stores/moaStore.js'
 
-const moaStoreForInput = useMoaStoreForInput()
-const { fetchLedgerInput } = moaStoreForInput
+const moaStore = useMoaStore()
+const { fetchLedgerInput, fetchLedgerList } = moaStore
 
 const BASEURI = '/api/ledgers'
 const states = reactive({ ledgerList: [] })
@@ -173,6 +173,7 @@ const isDataFullfiled = computed(() => {
 const handleLedgerInput = async () => {
   try {
     await fetchLedgerInput(inputList)
+    await fetchLedgerList()
     alert('작성이 완료되었습니다!')
     resetLedgerInput()
   } catch (error) {

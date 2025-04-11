@@ -253,6 +253,28 @@
       "amount": 35000,
       "desc": "저녁 식사",
       "author": "kim"
+    },
+    {
+      "id": "f710",
+      "ledgerId": "1",
+      "isWithDraw": true,
+      "when": "2025-04-11",
+      "where": "편의점",
+      "category": "식비",
+      "amount": 1800,
+      "desc": "컵라면",
+      "author": "모찌"
+    },
+    {
+      "id": "a1f1",
+      "ledgerId": "1",
+      "isWithDraw": true,
+      "when": "2025-04-11",
+      "where": "치킨",
+      "category": "식비",
+      "amount": 1000000,
+      "desc": "황올",
+      "author": "모찌"
     }
   ]
 }

@@ -80,12 +80,10 @@
 import BaseButton from '@/components/common/BaseButton.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
 import { useMoaStore } from '@/stores/moaStore.js'
-import { useMoaStoreForInput } from '@/stores/moaStoreForInput.js'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
+
 const moaStore = useMoaStore()
-const moaStoreForInput = useMoaStoreForInput()
-const { fetchLedgerInput } = moaStoreForInput
-const { categoryWithdraw, categoryIncome } = moaStore
+const { categoryWithdraw, categoryIncome, fetchLedgerInput, fetchLedgerList } = moaStore
 const getMyLedgerList = computed(() => moaStore.getMyLedgerList)
 const isDarkMode = computed(() => moaStore.isDarkMode)
 
@@ -119,6 +117,7 @@ const handleSelectedLedger = id => {
 const handleLedgerInput = async () => {
   try {
     await Promise.all(inputList.value.map(data => fetchLedgerInput(data)))
+    await fetchLedgerList()
     alert('작성이 완료되었습니다!')
     resetLedgerInput()
   } catch (error) {
