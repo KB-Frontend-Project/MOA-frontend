@@ -5,6 +5,7 @@ import axios from 'axios'
 export const useMoaStore = defineStore('moa', () => {
   const categoryWithdraw = ['식비', '교통', '쇼핑', ' 문화']
   const categoryIncome = ['급여', '기타']
+  const isLoading = ref(false)
 
   // entrieList(가계부 항목) 외에 다른 컬렉션들도 담기 가능
   const states = reactive({
@@ -373,6 +374,7 @@ export const useMoaStore = defineStore('moa', () => {
 
   return {
     user,
+    isLoading,
     toggleDarkMode,
     isDarkMode,
     initDarkMode,
