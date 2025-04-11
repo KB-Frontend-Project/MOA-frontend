@@ -74,8 +74,9 @@ const formatDate = date => new Date(date).getDate() + ' 일 '
 const formatCurrency = num => ` ${Number(num).toLocaleString()} 원`
 
 onMounted(async () => {
+  await store.fetchEntrieList()
   recentEntries.value = [...store.states.entrieList].slice(-3).reverse()
-
+  
   // 차트 렌더링 예시
   const ctx1 = document.getElementById('monthlyChart')
   new Chart(ctx1, {
