@@ -153,11 +153,6 @@ const formatAccountNumber = e => {
 
   newNumber.value = formatted
 }
-
-onMounted(async () => {
-  await fetchAccountList()
-  await fetchUserAccountList()
-})
 </script>
 
 <style scoped>

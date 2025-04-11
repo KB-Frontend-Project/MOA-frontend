@@ -74,7 +74,6 @@ const formatDate = date => new Date(date).getDate() + ' 일 '
 const formatCurrency = num => ` ${Number(num).toLocaleString()} 원`
 
 onMounted(async () => {
-  await store.fetchEntrieList()
   recentEntries.value = [...store.states.entrieList].slice(-3).reverse()
 
   // 차트 렌더링 예시
@@ -83,12 +82,14 @@ onMounted(async () => {
     type: 'bar',
     data: {
       labels: ['1월', '2월', '3월'],
-      datasets: [{
-        label: '지출',
-        data: [50000, 70000, 30000],
-        backgroundColor: '#f08080'
-      }]
-    }
+      datasets: [
+        {
+          label: '지출',
+          data: [50000, 70000, 30000],
+          backgroundColor: '#f08080',
+        },
+      ],
+    },
   })
 
   const ctx2 = document.getElementById('categoryChart')
@@ -96,11 +97,13 @@ onMounted(async () => {
     type: 'doughnut',
     data: {
       labels: ['식비', '교통', '의료', '기타'],
-      datasets: [{
-        data: [40, 20, 15, 25],
-        backgroundColor: ['#ff9999', '#66b3ff', '#99ff99', '#c2c2f0']
-      }]
-    }
+      datasets: [
+        {
+          data: [40, 20, 15, 25],
+          backgroundColor: ['#ff9999', '#66b3ff', '#99ff99', '#c2c2f0'],
+        },
+      ],
+    },
   })
 })
 </script>
@@ -130,7 +133,6 @@ onMounted(async () => {
   }
 }
 
-
 .day {
   font-weight: bold;
   padding: 0.3rem 0.6rem;
@@ -139,17 +141,24 @@ onMounted(async () => {
   min-width: 3rem;
   text-align: center;
 }
-.color-4 { background: #e57373; }
-.color-10, .color-15 { background: #f6c26b; }
-.color-25 { background: #a5d6a7; }
-
+.color-4 {
+  background: #e57373;
+}
+.color-10,
+.color-15 {
+  background: #f6c26b;
+}
+.color-25 {
+  background: #a5d6a7;
+}
 
 .summary-section {
   display: flex;
   justify-content: space-between;
   gap: 2rem;
 }
-.recent, .monthly {
+.recent,
+.monthly {
   flex: 1;
   background: #f9f9f9;
   padding: 1rem;
@@ -167,9 +176,17 @@ onMounted(async () => {
   font-size: 1rem;
   background: #ffffff;
 }
-.monthly .income { color: #3cb371; font-weight: 600; }
-.monthly .expense { color: #dc143c; font-weight: 600; }
-.monthly .net { font-weight: bold; }
+.monthly .income {
+  color: #3cb371;
+  font-weight: 600;
+}
+.monthly .expense {
+  color: #dc143c;
+  font-weight: 600;
+}
+.monthly .net {
+  font-weight: bold;
+}
 
 .chart-canvas {
   width: 100% !important;
@@ -182,10 +199,14 @@ onMounted(async () => {
   padding: 0.8rem;
   margin-bottom: 0.7rem;
   background: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
-.income { color: green; }
-.expense { color: red; }
+.income {
+  color: green;
+}
+.expense {
+  color: red;
+}
 
 .charts-section {
   display: flex;
@@ -261,6 +282,4 @@ onMounted(async () => {
 .dark-mode h2 {
   color: #f0f0f0;
 }
-
-
 </style>
