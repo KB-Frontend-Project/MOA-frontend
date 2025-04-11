@@ -11,7 +11,8 @@ import {
   Legend,
   ArcElement,
 } from 'chart.js'
-import { ref, watch, toRef } from 'vue'
+import { ref, toRef, watch, computed } from 'vue'
+import { useMoaStore } from '@/stores/moaStore'
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement)
 
@@ -23,10 +24,15 @@ const props = defineProps({
 const chartRef = ref(null)
 const chartOptions = toRef(props, 'chartOptions')
 
-watch(chartOptions, () => {
+// 다크모드 상태 가져오기
+const moaStore = useMoaStore()
+const isDarkMode = computed(() => moaStore.isDarkMode)
+
+// 옵션 반영 watch
+watch(isDarkMode, () => {
   if (chartRef.value?.chartInstance) {
     chartRef.value.chartInstance.options = chartOptions.value
     chartRef.value.chartInstance.update()
   }
-}, { deep: true })
+}, { immediate: true })
 </script>
