@@ -45,7 +45,7 @@ watchEffect(() => {
   let _width = parseFloat(props._w)
   let _height = parseFloat(props._h)
   if (props._h < 2) {
-    props._h = 2
+    _height = 2
   }
 
   let temp = parseFloat(props._textSize)
