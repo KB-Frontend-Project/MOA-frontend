@@ -64,6 +64,17 @@
       "alert": true,
       "shake_unit": 5,
       "balance": 0
+    },
+    {
+      "id": "1fce",
+      "name": "",
+      "email": "serim@naver.com",
+      "password": "1234",
+      "image": "default.jpg",
+      "createdAt": "2025-04-11",
+      "alert": true,
+      "shake_unit": 5,
+      "balance": 0
     }
   ],
   "ledgers": [

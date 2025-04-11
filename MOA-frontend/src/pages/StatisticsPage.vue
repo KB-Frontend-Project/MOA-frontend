@@ -11,8 +11,8 @@
       </div>
       <div class="highlight-box2">
         <div class="highlight-content">
-          <span class="highlight-text2">{{ maxMonth }}월에 가장 많이 소비했어요!</span>
-          <div class="spending-amount2">{{ maxSpendingAmount.toLocaleString() }}원</div>
+          <span class="highlight-text">{{ maxMonth }}월에 가장 많이 소비했어요!</span>
+          <div class="spending-amount">{{ maxSpendingAmount.toLocaleString() }}원</div>
         </div>
       </div>
     </div>
@@ -580,24 +580,8 @@ watch(
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.highlight-text2 {
-  color: black;
-  font-size: 1.3rem;
-  font-weight: 600;
-  display: block;
-  margin-bottom: 1rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
 .spending-amount {
   color: white;
-  font-size: 2rem;
-  font-weight: 700;
-  margin-top: 0.5rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.spending-amount2 {
-  color: black;
   font-size: 2rem;
   font-weight: 700;
   margin-top: 0.5rem;
