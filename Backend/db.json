@@ -53,6 +53,17 @@
       "alert": true,
       "shake_unit": 5,
       "balance": 0
+    },
+    {
+      "id": "d4ef",
+      "name": "",
+      "email": "kkh98",
+      "password": "rnjsrudgus",
+      "image": "default.jpg",
+      "createdAt": "2025-04-11",
+      "alert": true,
+      "shake_unit": 5,
+      "balance": 0
     }
   ],
   "ledgers": [
@@ -79,6 +90,22 @@
       "lastEditAt": "2023-04-01",
       "isShare": true,
       "desc": "월별 식비 관리 가계부"
+    },
+    {
+      "id": "1744337765070",
+      "name": "김밥",
+      "createdAt": "2025-04-11",
+      "lastEditAt": "2025-04-11",
+      "isShare": false,
+      "desc": "김밥 먹고 싶어"
+    },
+    {
+      "id": "1744340093003",
+      "name": "테스트",
+      "createdAt": "2025-04-11",
+      "lastEditAt": "2025-04-11",
+      "isShare": false,
+      "desc": "테스트123"
     }
   ],
   "accounts": [
@@ -139,6 +166,26 @@
       "id": "4",
       "userId": "2",
       "ledgerId": "3"
+    },
+    {
+      "id": "1744337765095",
+      "userId": "2",
+      "ledgerId": "1744337765070"
+    },
+    {
+      "id": "1744337765105",
+      "userId": "1",
+      "ledgerId": "1744337765070"
+    },
+    {
+      "id": "1744340093022",
+      "userId": "1",
+      "ledgerId": "1744340093003"
+    },
+    {
+      "id": "1744340093029",
+      "userId": "2",
+      "ledgerId": "1744340093003"
     }
   ],
   "user_accounts": [

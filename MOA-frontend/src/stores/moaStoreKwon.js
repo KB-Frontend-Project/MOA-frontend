@@ -36,7 +36,7 @@ export const useUserLedgerStore = defineStore('userLedgerStore', () => {
   })
 
   const getCurrentUser = async () => {
-    const userEmail = localStorage.getItem('email')
+    const userEmail = JSON.parse(localStorage.getItem('moa-user')).email
 
     try {
       let usersData = (await axios.get(baseURL + '/users')).data
@@ -47,7 +47,7 @@ export const useUserLedgerStore = defineStore('userLedgerStore', () => {
         }
       }
 
-      userLedgerInfo.name = localStorage.getItem('name')
+      userLedgerInfo.name = JSON.parse(localStorage.getItem('moa-user')).name
     } catch (e) {
       console.error('error at getCurrentUser func', e)
     }
