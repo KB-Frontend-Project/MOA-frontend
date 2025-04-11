@@ -1,48 +1,105 @@
 <template>
-  <div :class="['chart-page-container', { darkmode: isDarkMode }]">
-    <div class="line-chart-container">
-      <LineChart
-        :key="isDarkMode"
-        v-if="isReady"
-        :chartData="lineDataMonthly"
-        :chartOptions="optionsLine"
-      />
+  <div class="statistics-container container">
+    <div class="statistics-header">
+      <!-- <h1 class="page-title">소비 통계</h1> -->
+
+      <div class="highlight-box">
+        <div class="highlight-content">
+          <span class="highlight-text">이번 달 사용 금액</span>
+          <div class="spending-amount">{{ thisMonthSpending.toLocaleString() }}원</div>
+        </div>
+      </div>
+      <div class="highlight-box2">
+        <div class="highlight-content">
+          <span class="highlight-text2">{{ maxMonth }}월에 가장 많이 소비했어요!</span>
+          <div class="spending-amount2">{{ maxSpendingAmount.toLocaleString() }}원</div>
+        </div>
+      </div>
     </div>
-    <div class="bar-chart-container">
-      <BarChart
-        :key="isDarkMode"
-        v-if="isReady"
-        :chartData="barDataWeekly"
-        :chartOptions="optionsBar"
-      />
-    </div>
-    <div class="pie-chart-container">
-      <PieChart
-        :key="isDarkMode"
-        v-if="isReady"
-        :chartData="pieDataCategory"
-        :chartOptions="optionsPie"
-      />
+
+    <div class="charts-grid">
+      <div class="chart-card line-chart">
+        <div class="chart-header">
+          <h2>월별 소비 추이</h2>
+        </div>
+        <div class="chart-content">
+          <LineChart v-if="isReady" :chartData="lineDataMonthly" :chartOptions="optionsLine" />
+        </div>
+      </div>
+
+      <div class="chart-card bar-chart">
+        <div class="chart-header">
+          <div class="bar-chart-header">
+            <h2>주별 수익/지출</h2>
+            <div class="month-selector">
+              <select v-model="selectedMonth" class="month-select">
+                <option v-for="month in months" :key="month.value" :value="month.value">
+                  {{ month.label }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="chart-content">
+          <BarChart
+            v-if="isReady && barLoading"
+            :chartData="barDataWeekly"
+            :chartOptions="optionsBar"
+          />
+        </div>
+      </div>
+
+      <div class="chart-card pie-chart">
+        <div class="chart-header">
+          <h2>카테고리별 소비</h2>
+        </div>
+        <div class="chart-content">
+          <PieChart v-if="isReady" :chartData="pieDataCategory" :chartOptions="optionsPie" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed, nextTick } from 'vue'
+import { ref, onMounted, computed, watch, nextTick } from 'vue'
 import LineChart from '@/components/statistics/LineGraph.vue'
 import { useMoaStore } from '@/stores/moaStore'
 import BarChart from '@/components/statistics/BarChart.vue'
 import PieChart from '@/components/statistics/PieChart.vue'
-import { watch } from 'vue'
 
 const moaStore = useMoaStore()
 const { fetchEntrieList } = moaStore
-const isDarkMode = computed(() => moaStore.isDarkMode)
 const getMonthlySpending = computed(() => moaStore.getMonthlySpending)
-const getWeeklySpending = computed(() => moaStore.getWeeklySpending)
+const { getWeeklySpending } = moaStore
 const getCategorySpending = computed(() => moaStore.getCategorySpending)
 
+const maxMonth = computed(() => {
+  const monthlyData = getMonthlySpending.value
+  if (!monthlyData || monthlyData.length === 0) return '-'
+
+  const maxSpending = Math.max(...monthlyData.map(item => item.totalSpending))
+  const maxMonthData = monthlyData.find(item => item.totalSpending === maxSpending)
+  return maxMonthData ? maxMonthData.month : '-'
+})
+
+const maxSpendingAmount = computed(() => {
+  const monthlyData = getMonthlySpending.value
+  if (!monthlyData || monthlyData.length === 0) return 0
+
+  const maxSpending = Math.max(...monthlyData.map(item => item.totalSpending))
+  return maxSpending
+})
+
+const currentMonth = computed(() => {
+  const now = new Date()
+  return now.getMonth() + 1 // JavaScript의 월은 0부터 시작하므로 1을 더함
+})
+
 const isReady = ref(false)
+const barLoading = ref(false)
+
+const thisMonthSpending = ref(0)
 
 const selectMonth = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
 
@@ -69,28 +126,45 @@ const lineDataMonthly = ref({
   ],
 })
 
+const selectedMonth = ref(new Date().getMonth() + 1) // 현재 월을 기본값으로 설정
+
+const months = [
+  { value: 1, label: '1월' },
+  { value: 2, label: '2월' },
+  { value: 3, label: '3월' },
+  { value: 4, label: '4월' },
+  { value: 5, label: '5월' },
+  { value: 6, label: '6월' },
+  { value: 7, label: '7월' },
+  { value: 8, label: '8월' },
+  { value: 9, label: '9월' },
+  { value: 10, label: '10월' },
+  { value: 11, label: '11월' },
+  { value: 12, label: '12월' },
+]
+
 const barDataWeekly = ref({
   labels: ['1주', '2주', '3주', '4주'],
   datasets: [
     {
       label: '지출',
-      backgroundColor: 'rgba(67, 181, 129, 0.3)', // 배경색을 더 선명하게
+      backgroundColor: 'rgba(67, 181, 129, 0.3)',
       borderColor: 'rgba(67, 181, 129, 1)',
       borderWidth: 1,
-      borderRadius: 2, // 막대 모서리를 둥글게
-      hoverBackgroundColor: 'rgba(67, 181, 129, 0.9)', // 호버 시 배경색
+      borderRadius: 2,
+      hoverBackgroundColor: 'rgba(67, 181, 129, 0.9)',
       hoverBorderColor: 'rgba(67, 181, 129, 1)',
-      data: [],
+      data: [0, 0, 0, 0],
     },
     {
       label: '수입',
-      backgroundColor: 'rgba(240, 71, 71, 0.3)', // 배경색을 더 선명하게
+      backgroundColor: 'rgba(240, 71, 71, 0.3)',
       borderColor: 'rgba(240, 71, 71, 1)',
       borderWidth: 1,
-      borderRadius: 2, // 막대 모서리를 둥글게
-      hoverBackgroundColor: 'rgba(240, 71, 71, 0.9)', // 호버 시 배경색
+      borderRadius: 2,
+      hoverBackgroundColor: 'rgba(240, 71, 71, 0.9)',
       hoverBorderColor: 'rgba(240, 71, 71, 1)',
-      data: [],
+      data: [0, 0, 0, 0],
     },
   ],
 })
@@ -127,29 +201,20 @@ const optionsLine = ref({
   plugins: {
     legend: {
       display: true,
-      position: 'top', // 범례 위치
+      position: 'top',
       labels: {
-        boxWidth: 12, // 범례 박스 크기
-        padding: 15, // 범례 패딩
+        boxWidth: 12,
+        padding: 15,
         font: {
           size: 12,
         },
       },
     },
     title: {
-      display: true,
-      text: '월별 소비 추이',
-      font: {
-        size: 16,
-        weight: 'bold',
-      },
-      padding: {
-        top: 10,
-        bottom: 20,
-      },
+      display: false,
     },
     tooltip: {
-      backgroundColor: 'rgba(0, 0, 0, 0.7)', // 툴팁 배경색 변경
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
       titleFont: {
         size: 14,
       },
@@ -157,8 +222,8 @@ const optionsLine = ref({
         size: 13,
       },
       padding: 10,
-      cornerRadius: 6, // 툴팁 모서리 둥글게
-      displayColors: false, // 툴팁에 색상 상자 표시 안 함
+      cornerRadius: 6,
+      displayColors: false,
     },
   },
   scales: {
@@ -175,37 +240,46 @@ const optionsLine = ref({
     },
     y: {
       grid: {
-        color: 'rgba(0, 0, 0, 0.05)', // 가로선 색상 연하게
+        color: 'rgba(0, 0, 0, 0.05)',
         lineWidth: 1,
-        drawBorder: false, // 테두리 제거
+        drawBorder: false,
       },
       ticks: {
         font: {
           size: 11,
         },
         color: '#666',
-        padding: 10, // 축과 텍스트 사이 간격
+        padding: 10,
         callback: function (value) {
           return value.toLocaleString() + '원'
         },
       },
-      beginAtZero: true, // 0부터 시작
+      beginAtZero: true,
     },
   },
   elements: {
     line: {
-      borderWidth: 2, // 선 두께
+      borderWidth: 2,
     },
   },
   interaction: {
-    intersect: false, // 정확히 포인트에 호버하지 않아도 가장 가까운 데이터 표시
+    intersect: false,
     mode: 'index',
   },
   animation: {
-    duration: 1000, // 애니메이션 지속 시간
-    easing: 'easeOutQuart', // 부드러운 애니메이션 효과
+    duration: 1000,
+    easing: 'easeOutQuart',
+  },
+  layout: {
+    padding: {
+      top: 20,
+      right: 20,
+      bottom: 20,
+      left: 20,
+    },
   },
 })
+
 const optionsBar = ref({
   responsive: true,
   maintainAspectRatio: false,
@@ -222,16 +296,7 @@ const optionsBar = ref({
       },
     },
     title: {
-      display: true,
-      text: '주간별 소비 추이',
-      font: {
-        size: 16,
-        weight: 'bold',
-      },
-      padding: {
-        top: 10,
-        bottom: 20,
-      },
+      display: false,
     },
     tooltip: {
       backgroundColor: 'rgba(0, 0, 0, 0.7)',
@@ -279,15 +344,30 @@ const optionsBar = ref({
         },
       },
       beginAtZero: true,
+      suggestedMin: 0,
+      suggestedMax: function (context) {
+        const values = context.chart.data.datasets[0].data
+        const max = Math.max(...values)
+        return Math.ceil(max * 1.2) // 최대값의 120%로 설정
+      },
     },
   },
   animation: {
     duration: 1000,
     easing: 'easeOutQuart',
   },
-  barPercentage: 0.7, // 막대 너비 조정
-  categoryPercentage: 0.8, // 카테고리별 간격 조정
+  barPercentage: 0.6,
+  categoryPercentage: 0.8,
+  layout: {
+    padding: {
+      top: 10,
+      right: 10,
+      bottom: 10,
+      left: 10,
+    },
+  },
 })
+
 const optionsPie = ref({
   responsive: true,
   maintainAspectRatio: false,
@@ -305,7 +385,7 @@ const optionsPie = ref({
     },
     title: {
       display: true,
-      text: '카테고리별 소비 추이',
+      // text: '카테고리별 소비 추이',
       font: {
         size: 16,
         weight: 'bold',
@@ -353,7 +433,6 @@ const updateMonthlyData = () => {
     console.warn('monthlyData가 아직 준비 안 됨')
     return
   }
-  console.log('전체 월별 소비 데이터:', monthlyData)
 
   const filteredData = selectMonth.map(monthStr => {
     const monthNum = parseInt(monthStr)
@@ -366,11 +445,53 @@ const updateMonthlyData = () => {
   lineDataMonthly.value.datasets[0].data = filteredData.map(item => item.totalSpending)
 }
 
-const updateWeeklyData = () => {
-  barDataWeekly.value.datasets[0].data = getWeeklySpending.value.map(spend => spend.withDraw ?? 0)
-  barDataWeekly.value.datasets[1].data = getWeeklySpending.value.map(spend => spend.income ?? 0)
+const updateBarChartData = () => {
+  barLoading.value = true
 
-  console.log(barDataWeekly.value)
+  console.log('Bar차트 업데이트')
+  const targetMonth = selectedMonth.value
+  const weeklyData = getWeeklySpending(targetMonth) // 함수 호출
+
+  if (!weeklyData) {
+    console.log('No weekly data available')
+    return
+  }
+
+  console.log('Weekly Data:', weeklyData)
+  console.log('Selected Month:', targetMonth)
+
+  if (weeklyData.length === 0) {
+    console.log('No data available, initializing with zeros')
+    barDataWeekly.value.datasets[0].data = [0, 0, 0, 0]
+    barDataWeekly.value.datasets[1].data = [0, 0, 0, 0]
+    thisMonthSpending.value = 0 // 데이터 없으면 총액도 0으로
+    return
+  }
+
+  const weeklyWithDraw = [0, 0, 0, 0]
+  const weeklyIncome = [0, 0, 0, 0]
+
+  weeklyData.forEach((item, index) => {
+    if (index < 4) {
+      weeklyWithDraw[index] = item.withDraw ?? 0
+      weeklyIncome[index] = item.income ?? 0
+    }
+  })
+
+  console.log('Mapped Data:', {
+    weeklyWithDraw,
+    weeklyIncome,
+  })
+
+  barDataWeekly.value.datasets[0].data = weeklyWithDraw
+  barDataWeekly.value.datasets[1].data = weeklyIncome
+
+  // 🔥 여기 추가
+  const totalSpending = weeklyData.reduce((sum, item) => sum + (item.withDraw ?? 0), 0)
+  thisMonthSpending.value = totalSpending
+
+  console.log('이번 달 총 사용 금액:', thisMonthSpending.value)
+  console.log('Final Bar Chart Data:', barDataWeekly.value)
 }
 
 const updateCategoryData = () => {
@@ -378,83 +499,239 @@ const updateCategoryData = () => {
   pieDataCategory.value.datasets[0].data = Object.values(getCategorySpending.value)
 }
 
-const applyChartColors = isDark => {
-  const textColor = isDark ? '#eee' : '#666'
-  const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'
-  const tooltipTextColor = isDark ? '#eee' : '#fff'
-
-  const updateColors = optionsRef => {
-    if (optionsRef.value.scales?.x?.ticks) {
-      optionsRef.value.scales.x.ticks.color = textColor
-      optionsRef.value.scales.x.grid.color = gridColor
-    }
-    if (optionsRef.value.scales?.y?.ticks) {
-      optionsRef.value.scales.y.ticks.color = textColor
-      optionsRef.value.scales.y.grid.color = gridColor
-    }
-
-    if (optionsRef.value.plugins?.legend?.labels) {
-      optionsRef.value.plugins.legend.labels.color = textColor
-    }
-
-    if (optionsRef.value.plugins?.title) {
-      optionsRef.value.plugins.title.color = textColor
-    }
-
-    if (optionsRef.value.plugins?.tooltip) {
-      optionsRef.value.plugins.tooltip.titleColor = tooltipTextColor
-      optionsRef.value.plugins.tooltip.bodyColor = tooltipTextColor
-    }
-  }
-
-  updateColors(optionsLine)
-  updateColors(optionsBar)
-  updateColors(optionsPie)
-}
-
 onMounted(async () => {
   await fetchEntrieList()
   updateMonthlyData()
-  updateWeeklyData()
+  updateBarChartData()
   updateCategoryData()
-
-  applyChartColors(isDarkMode.value)
   isReady.value = true
+  barLoading.value = true
 })
 
-watch(isDarkMode, async newVal => {
-  await nextTick() // ✅ 렌더 이후 안전하게 반영
-  applyChartColors(newVal)
-})
+// 월 선택이 변경될 때마다 차트 업데이트
+watch(
+  selectedMonth,
+  async () => {
+    barLoading.value = false
+    await nextTick() // 화면이 실제로 반영될 때까지 기다려
+    updateBarChartData()
+    showChart.value = true
+  },
+  { immediate: true }
+)
 </script>
+
 <style scoped>
-.chart-page-container {
+.statistics-container {
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.statistics-header {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  color: #43b581;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.highlight-box {
+  background: linear-gradient(135deg, #43b581 0%, #3aa876 100%);
+  padding: 1rem;
+  margin-left: 1rem;
+  border-radius: 16px;
+  display: inline-block;
+  box-shadow: 0 8px 16px rgba(67, 181, 129, 0.2);
+  min-width: 300px;
+  transition: transform 0.2s ease;
+}
+
+.highlight-box2 {
+  background: #7289da;
+  padding: 1rem;
+  margin-left: 1rem;
+  border-radius: 16px;
+  display: inline-block;
+  box-shadow: 0 8px 16px rgba(67, 181, 129, 0.2);
+  min-width: 300px;
+  transition: transform 0.2s ease;
+}
+
+.highlight-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(67, 181, 129, 0.3);
+}
+
+.highlight-content {
+  text-align: center;
+}
+
+.highlight-text {
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 1rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.highlight-text2 {
+  color: black;
+  font-size: 1.3rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 1rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.spending-amount {
+  color: white;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.spending-amount2 {
+  color: black;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.charts-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: 45vh 45vh;
+  gap: 2rem;
+  margin-top: 2rem;
 }
-.line-chart-container {
+
+.chart-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(67, 181, 129, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(67, 181, 129, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 400px; /* 모든 카드의 높이를 동일하게 설정 */
+}
+
+.chart-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(67, 181, 129, 0.15);
+  border-color: rgba(67, 181, 129, 0.2);
+}
+
+.chart-header {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(67, 181, 129, 0.1);
+  flex-shrink: 0; /* 헤더 크기 고정 */
+}
+
+.chart-header h2 {
+  font-size: 1.2rem;
+  color: #43b581;
+  font-weight: 600;
+  margin: 0;
+}
+
+.chart-content {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+  height: 100%; /* 컨텐츠 영역이 남은 공간을 모두 차지하도록 설정 */
+}
+
+.line-chart {
   grid-column: 1 / -1;
 }
 
-.bar-chart-container {
+.bar-chart {
   grid-column: 1 / 7;
 }
 
-.pie-chart-container {
+.pie-chart {
   grid-column: 7 / -1;
 }
 
-.chart-page-container.darkmode {
-  background-color: #1e1e1e;
-  color: #eee;
+@media (max-width: 1024px) {
+  .bar-chart,
+  .pie-chart {
+    grid-column: 1 / -1;
+    height: 400px;
+  }
+
+  .statistics-container {
+    padding: 1.5rem;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
 }
 
-.chart-page-container.darkmode .line-chart-container,
-.chart-page-container.darkmode .bar-chart-container,
-.chart-page-container.darkmode .pie-chart-container {
-  background-color: #1e1e1e;
+@media (max-width: 768px) {
+  .statistics-container {
+    padding: 1rem;
+  }
+
+  .page-title {
+    font-size: 1.8rem;
+  }
+
+  .highlight-text {
+    font-size: 1.1rem;
+  }
+
+  .spending-amount {
+    font-size: 1.6rem;
+  }
+
+  .chart-card {
+    padding: 1rem;
+  }
+
+  .chart-header h2 {
+    font-size: 1.1rem;
+  }
 }
 
-/* Chart.js 내부 스타일은 차트 옵션에서 직접 설정해야 함 */
+.bar-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.month-selector {
+  margin-left: 1rem;
+}
+
+.month-select {
+  padding: 0.5rem;
+  border: 1px solid rgba(67, 181, 129, 0.3);
+  border-radius: 8px;
+  background-color: white;
+  color: #43b581;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.month-select:hover {
+  border-color: #43b581;
+}
+
+.month-select:focus {
+  outline: none;
+  border-color: #43b581;
+  box-shadow: 0 0 0 2px rgba(67, 181, 129, 0.1);
+}
 </style>
