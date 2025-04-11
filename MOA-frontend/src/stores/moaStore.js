@@ -69,10 +69,16 @@ export const useMoaStore = defineStore('moa', () => {
    */
   const fetchLedgerList = async () => {
     try {
-      const res = await axios.get(LEDGERS_URL)
-      if (res.status === 200) {
-        states.ledgerList = res.data
+      // const res = await axios.get(LEDGERS_URL)
+      const [ledgerResponse, userLedgerResponse] = await Promise.all([
+        axios.get(`${LEDGERS_URL}`),
+        axios.get(`${USER_LEDGERS_URL}`),
+      ])
+      if (ledgerResponse.status === 200 && userLedgerResponse.status === 200) {
+        states.ledgerList = ledgerResponse.data
+        states.userLedgerList = userLedgerResponse.data
         console.log('ledgerList:', states.ledgerList)
+        console.log('userLedgerList:', states.userLedgerList)
       }
     } catch (err) {
       console.error('fetchLedgerList 에러:', err)
@@ -124,6 +130,19 @@ export const useMoaStore = defineStore('moa', () => {
       }
     } catch (err) {
       console.error('fetchUserLedgerList 에러:', err)
+    }
+  }
+
+  const fetchLedgerInput = async (data, successCallback = () => {}) => {
+    try {
+      const response = await axios.post(ENTRIES_URL, { ...data, author: user.value.name })
+      if (response.status === 201) {
+        successCallback()
+      } else {
+        console.error('status not 201')
+      }
+    } catch (error) {
+      console.error('fetchLegerInput error', error)
     }
   }
 
@@ -409,6 +428,7 @@ export const useMoaStore = defineStore('moa', () => {
     putUserBalance,
     postUserAccount,
     deleteUserAccount,
+    fetchLedgerInput,
     getMyEntryList,
     getMyAccountList,
     getMyLedgerList,
