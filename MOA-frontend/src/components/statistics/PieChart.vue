@@ -1,5 +1,5 @@
 <template>
-  <div><Pie :data="chartData" :options="chartOptions"></Pie></div>
+  <Pie ref="chartRef" :data="chartData" :options="chartOptions" />
 </template>
 
 <script setup>
@@ -9,13 +9,24 @@ import {
   Title,
   Tooltip,
   Legend,
-  ArcElement, // <- Pie 차트는 이거 필요해
+  ArcElement,
 } from 'chart.js'
+import { ref, watch, toRef } from 'vue'
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement)
 
-defineProps({
+const props = defineProps({
   chartData: Object,
   chartOptions: Object,
 })
+
+const chartRef = ref(null)
+const chartOptions = toRef(props, 'chartOptions')
+
+watch(chartOptions, () => {
+  if (chartRef.value?.chartInstance) {
+    chartRef.value.chartInstance.options = chartOptions.value
+    chartRef.value.chartInstance.update()
+  }
+}, { deep: true })
 </script>

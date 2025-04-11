@@ -1,5 +1,5 @@
 <template>
-  <div class="container text-center">
+  <div :class="['container text-center', { 'dark-mode': isDarkMode }]">
     <!-- 제일 위 줄 -->
     <div class="d-flex justify-content-center align-items-center mb-4">
       <img src="../assets/image 40.png" alt="" style="width: 7rem" />
@@ -89,7 +89,9 @@ import { useMoaStore } from '@/stores/moaStore.js'
 
 const moaStore = useMoaStore()
 
-const { fetchAccountList, fetchUserAccountList, postUserAccount, deleteUserAccount, user } =
+const isDarkMode = computed(() => moaStore.isDarkMode)
+
+const { fetchAccountList, fetchUserAccountList, postUserAccount, deleteUserAccount, postUserAccountId, user } =
   moaStore
 const getMyAccountList = computed(() => moaStore.getMyAccountList)
 
@@ -189,4 +191,23 @@ onMounted(async () => {
   color: #de8f5f; /* 눈에 잘 띄는 포인트 색 */
   margin-left: 0.3rem;
 }
+
+.dark-mode {
+  background-color: #1e1e1e;
+  color: #f2f2f2;
+}
+
+.dark-mode hr {
+  border-color: #444;
+}
+
+.dark-mode .first-line,
+.dark-mode .second-line {
+  color: #ddd;
+}
+
+.dark-mode .highlight-amount {
+  color: #f9c784;
+}
+
 </style>
