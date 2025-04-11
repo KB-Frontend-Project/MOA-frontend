@@ -1,78 +1,79 @@
 <template>
   <div :class="{ 'isDark-mode': isDarkMode }">
-  <header class="navbar navbar-expand-lg navbar-light bg-light px-4">
-    <div class="d-flex align-items-center">
-      <RouterLink to="/" class="d-flex align-items-center text-decoration-none text-dark">
-        <img src="@/assets/logo.png" alt="moa logo" class="me-2" width="32" />
-        <span class="navbar-brand mb-0 h1">moA</span>
-      </RouterLink>
-    </div>
+    <header class="navbar navbar-expand-lg navbar-light bg-light px-4">
+      <div class="d-flex align-items-center">
+        <RouterLink to="/" class="d-flex align-items-center text-decoration-none text-dark">
+          <img src="@/assets/logo.png" alt="moa logo" class="me-2" width="32" />
+          <span class="navbar-brand mb-0 h1">moA</span>
+        </RouterLink>
+      </div>
 
-    <div class="ms-auto d-flex align-items-center gap-3 position-relative">
-      <label class="switch">
-        <input type="checkbox" v-model="isDarkMode" />
-        <span class="slider round">
-          <span class="icon moon">🌙</span>
-          <span class="icon sun">☀️</span>
-        </span>
-      </label>
+      <div class="ms-auto d-flex align-items-center gap-3 position-relative">
+        <label class="switch">
+          <input type="checkbox" v-model="isDarkMode" />
+          <span class="slider round">
+            <span class="icon moon">🌙</span>
+            <span class="icon sun">☀️</span>
+          </span>
+        </label>
 
-      <!-- 종 아이콘 + 뱃지 -->
-      <div class="position-relative" @click="toggleAlert" style="cursor: pointer">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="26"
-          width="26"
-          fill="#55b4a1"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M12 2C10.35 2 9 3.35 9 5v1.09C6.16 7.25 4 9.92 4 13v4l-2 2v1h20v-1l-2-2v-4c0-3.08-2.16-5.75-5-6.91V5c0-1.65-1.35-3-3-3Zm0 20c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2Z"
-          />
-        </svg>
-
-        <!-- 뱃지 -->
-        <span v-if="unreadCount > 0" class="badge">{{ unreadCount }}</span>
-
-        <!-- 알림 목록 -->
-        <div v-if="alertOpen" class="notification-dropdown">
-          <div
-            v-for="(text, index) in notificationList"
-            :key="index"
-            class="notification-item"
-            :class="{ read: readNotifications.has(index) }"
-            @click="markAsRead(index)"
+        <!-- 종 아이콘 + 뱃지 -->
+        <div class="position-relative" @click="toggleAlert" style="cursor: pointer">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="26"
+            width="26"
+            fill="#55b4a1"
+            viewBox="0 0 24 24"
           >
-            {{ text }}
+            <path
+              d="M12 2C10.35 2 9 3.35 9 5v1.09C6.16 7.25 4 9.92 4 13v4l-2 2v1h20v-1l-2-2v-4c0-3.08-2.16-5.75-5-6.91V5c0-1.65-1.35-3-3-3Zm0 20c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2Z"
+            />
+          </svg>
+
+          <!-- 뱃지 -->
+          <span v-if="unreadCount > 0" class="badge">{{ unreadCount }}</span>
+
+          <!-- 알림 목록 -->
+          <div v-if="alertOpen" class="notification-dropdown">
+            <div
+              v-for="(text, index) in notificationList"
+              :key="index"
+              class="notification-item"
+              :class="{ read: readNotifications.has(index) }"
+              @click="markAsRead(index)"
+            >
+              {{ text }}
+            </div>
+          </div>
+        </div>
+
+        <!-- + 메뉴 버튼 -->
+        <div class="position-relative">
+          <button class="circle-button" @click="toggleMenu">+</button>
+          <div
+            v-if="menuOpen"
+            class="position-absolute bg-white border rounded shadow mt-2 end-0"
+            style="z-index: 1000; min-width: 180px"
+          >
+            <ul class="list-unstyled mb-0 py-2">
+              <li class="px-3 py-2 hover-bg" @click="openSharedLedger">공동 가계부 생성</li>
+              <li class="px-3 py-2 hover-bg" @click="openTransactionPopup">거래 내역 작성</li>
+              <li class="px-3 py-2 hover-bg" @click="openShakePiggyBank">통장 흔들기</li>
+            </ul>
           </div>
         </div>
       </div>
 
-      <!-- + 메뉴 버튼 -->
-      <div class="position-relative">
-        <button class="circle-button" @click="toggleMenu">+</button>
-        <div
-          v-if="menuOpen"
-          class="position-absolute bg-white border rounded shadow mt-2 end-0"
-          style="z-index: 1000; min-width: 180px"
-        >
-          <ul class="list-unstyled mb-0 py-2">
-            <li class="px-3 py-2 hover-bg" @click="openSharedLedger">공동 가계부 생성</li>
-            <li class="px-3 py-2 hover-bg" @click="openTransactionPopup">거래 내역 작성</li>
-            <li class="px-3 py-2 hover-bg" @click="openShakePiggyBank">통장 흔들기</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+      <div class="header-underline"></div>
+    </header>
 
-    <div class="header-underline"></div>
-  </header>
-
-  <Teleport to="#modal">
-    <InputLedgerPopup :ledgerPopup="ledgerPopup" @closetrigger="closeLedgerPopup" />
-    <ShakeBalance :shakePopup="shakePopup" @closeTrigger="closeShakePopup" />
-  </Teleport>
-</div>
+    <Teleport to="#modal">
+      <InputLedgerPopup :ledgerPopup="ledgerPopup" @closetrigger="closeLedgerPopup" />
+      <ShakeBalance :shakePopup="shakePopup" @closetrigger="closeShakePopup" />
+      <CreateLedgerPopup :createPopup="createPopup" @closetrigger="closeCreatePopup" />
+    </Teleport>
+  </div>
 </template>
 
 <script setup>
@@ -81,18 +82,24 @@ import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import InputLedgerPopup from '@/pages/InputLedgerPopup.vue'
 import ShakeBalance from '@/pages/ShakeBalance.vue'
+import CreateLedgerPopup from '@/pages/CreateLedgerPopup.vue'
 import { useMoaStore } from '@/stores/moaStore'
 import { useRouter } from 'vue-router'
 const menuOpen = ref(false)
 const alertOpen = ref(false)
 const ledgerPopup = ref(false)
 const shakePopup = ref(false)
+const createPopup = ref(false)
 const toggleDarkMode = () => {
   store.toggleDarkMode()
 }
 
 const closeShakePopup = () => {
   shakePopup.value = false
+}
+
+const closeCreatePopup = () => {
+  createPopup.value = false
 }
 
 const toggleMenu = () => {
@@ -108,7 +115,7 @@ const toggleAlert = () => {
 const store = useMoaStore()
 const isDarkMode = computed({
   get: () => store.isDarkMode,
-  set: () => store.toggleDarkMode()
+  set: () => store.toggleDarkMode(),
 })
 
 // 알림 관련
@@ -132,6 +139,7 @@ const unreadCount = computed(() => {
 const openSharedLedger = () => {
   console.log('공동 가계부 생성')
   menuOpen.value = false
+  createPopup.value = true
 }
 
 const openShakePiggyBank = () => {
@@ -301,7 +309,10 @@ input:checked + .slider::before {
   background-color: #ccc;
   border-radius: 34px;
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   transition: 0.4s;
   display: flex;
   align-items: center;
@@ -329,11 +340,15 @@ input:checked + .slider::before {
 /* 달 기본 강조 */
 .moon {
   opacity: 1;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 .sun {
   opacity: 0.5;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 /* 해 강조 (light mode) */
@@ -378,5 +393,4 @@ input:not(:checked) + .slider .sun {
   background-color: #3a3a3a;
   color: #ffffff;
 }
-
 </style>
