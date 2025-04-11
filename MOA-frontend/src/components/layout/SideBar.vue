@@ -1,8 +1,11 @@
 <template>
   <aside class="sidebar">
     <div class="sidebar-content">
-      <div class="sidebar-profile"></div>
-      <div class="sidebar-profile-hello">xx님의 가계부</div>
+      <div
+        class="sidebar-profile"
+        :style="{ 'background-image': `url(src/assets/${user.image})` }"
+      ></div>
+      <div class="sidebar-profile-hello">{{ user.name }}님의 가계부</div>
     </div>
     <div class="sidebar-content">
       <div class="sidebar-title">가계부</div>
@@ -59,6 +62,7 @@
 </template>
 
 <script setup>
+import { useMoaStore } from '@/stores/moaStore.js'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -68,6 +72,7 @@ const path = computed(() => {
   console.log('계산된 경로 세그먼트:', segments)
   return segments
 })
+const { user } = useMoaStore()
 
 console.log(path)
 </script>
@@ -88,9 +93,10 @@ console.log(path)
 .sidebar-profile {
   width: 5rem;
   height: 5rem;
-  background-color: rgb(194, 194, 194);
   border-radius: 50%;
   margin: 1.6rem auto;
+  background-position: center;
+  background-size: cover;
 }
 .sidebar-profile-hello {
   text-align: center;
