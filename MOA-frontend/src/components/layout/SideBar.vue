@@ -52,7 +52,7 @@
           to="/profile"
           >설정</router-link
         >
-        <router-link class="router-link" to="#">로그아웃</router-link>
+        <router-link class="router-link" to="/logout">로그아웃</router-link>
       </div>
     </div>
   </aside>
@@ -84,7 +84,6 @@ console.log(path)
 .dark-mode .sidebar a {
   color: white !important;
 }
-
 
 .sidebar-profile {
   width: 5rem;
