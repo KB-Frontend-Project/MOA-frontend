@@ -18,7 +18,7 @@
 
       <div class="login-footer">
         <!-- 비밀번호 찾기 미구현 -->
-        <a href="http://localhost:5173/password" class="footer-link">비밀번호 찾기</a> 
+        <a href="http://localhost:5173/password" class="footer-link">비밀번호 찾기</a>
         <a href="http://localhost:5173/signup" class="footer-link">회원가입</a>
       </div>
     </div>
@@ -34,7 +34,6 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import Header from '@/components/layout/Header.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
 import BaseButton from '@/components/common/BaseButton.vue'
 import BaseModal from '@/components/common/BaseModal.vue'
@@ -52,7 +51,7 @@ const password = ref('')
 const showModal = ref(false)
 const modalTitle = ref('')
 const modalMessage = ref('')
-const loginSuccess = ref(false) 
+const loginSuccess = ref(false)
 
 const handleLogin = async () => {
   console.log('✔️ 로그인 버튼 클릭됨')
@@ -121,7 +120,7 @@ const handleModalClose = () => {
 
 .footer-link {
   text-decoration: none;
-  color: #43b581;;
+  color: #43b581;
   cursor: pointer;
 }
 .footer-link:hover {

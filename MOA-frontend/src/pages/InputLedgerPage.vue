@@ -1,5 +1,5 @@
 <template>
-  <div class="input-page-container">
+  <div :class="['input-page-container', { 'darkmode' : isDarkMode}]">
     <div class="ledger-select-container">
       <BaseButton
         v-for="ledger in getMyLedgerList"
@@ -82,12 +82,12 @@ import BaseInput from '@/components/common/BaseInput.vue'
 import { useMoaStore } from '@/stores/moaStore.js'
 import { useMoaStoreForInput } from '@/stores/moaStoreForInput.js'
 import { computed, onMounted, ref } from 'vue'
-
-const moaStoreForInput = useMoaStoreForInput()
 const moaStore = useMoaStore()
+const moaStoreForInput = useMoaStoreForInput()
 const { fetchLedgerInput } = moaStoreForInput
 const { categoryWithdraw, categoryIncome, fetchLedgerList, fetchUserLedgerList } = moaStore
 const getMyLedgerList = computed(() => moaStore.getMyLedgerList)
+const isDarkMode = computed(() => moaStore.isDarkMode)
 
 const selectedLedgerId = ref('1')
 const today = computed(() => {
@@ -261,4 +261,33 @@ select {
   border-color: #f04747;
   color: #f04747;
 }
+
+.input-page-container.darkmode {
+  background-color: #1e1e1e;
+  color: #eee;
+}
+
+.input-page-container.darkmode .form-title,
+.input-page-container.darkmode .header {
+  color: #f0f0f0;
+}
+
+.input-page-container.darkmode select,
+.input-page-container.darkmode input,
+.input-page-container.darkmode .input-select {
+  background-color: #2a2a2a;
+  color: #eee;
+  border-color: #55b4a1;
+}
+
+.input-page-container.darkmode .ledger-select-button.not-selected {
+  color: #bbb;
+  border-color: #bbb;
+}
+
+.input-page-container.darkmode .add-button-container,
+.input-page-container.darkmode .delete-button-container {
+  color: #a0eac0;
+}
+
 </style>

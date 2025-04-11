@@ -5,6 +5,7 @@ import axios from 'axios'
 export const useMoaStore = defineStore('moa', () => {
   const categoryWithdraw = ['식비', '교통', '쇼핑', ' 문화']
   const categoryIncome = ['급여', '기타']
+  const isLoading = ref(false)
 
   // entrieList(가계부 항목) 외에 다른 컬렉션들도 담기 가능
   const states = reactive({
@@ -16,18 +17,19 @@ export const useMoaStore = defineStore('moa', () => {
     accountList: [],
   })
 
-  //테스트용 더미
-  const user = ref({
-    id: '1',
-    name: '모찌',
-    email: 'hong',
-    password: 'password123',
-    image: 'profile1.jpg',
-    createdAt: '2023-01-15',
-    alert: true,
-    shake_unit: 5,
-    balance: 91172,
-  })
+  // 테스트용 더미
+  // const user = ref({
+  //   id: '1',
+  //   name: '모찌',
+  //   email: 'hong',
+  //   password: 'password123',
+  //   image: 'profile1.jpg',
+  //   createdAt: '2023-01-15',
+  //   alert: true,
+  //   shake_unit: 5,
+  //   balance: 91172,
+  // })
+  const user = ref(null)
 
   const ENTRIES_URL = '/api/entries'
   const LEDGERS_URL = '/api/ledgers'
@@ -356,6 +358,8 @@ export const useMoaStore = defineStore('moa', () => {
 
   const getMyAccountList = computed(() => {
     //추후에 유저.id를 filter하도록 변경해야함
+    console.log('id:', user.value.id)
+
     const myAccountIdList = states.userAccountList
       .filter(item => {
         if (item.userId === user.value.id) {
@@ -370,6 +374,7 @@ export const useMoaStore = defineStore('moa', () => {
 
   return {
     user,
+    isLoading,
     toggleDarkMode,
     isDarkMode,
     initDarkMode,

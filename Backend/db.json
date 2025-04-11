@@ -9,7 +9,7 @@
       "createdAt": "2023-01-15",
       "alert": true,
       "shake_unit": 10,
-      "balance": 91172
+      "balance": 91205
     },
     {
       "id": "2",
@@ -126,24 +126,6 @@
       "bank": "국민은행",
       "accountNumber": "123456-78-654321",
       "balance": 100000000
-    },
-    {
-      "id": "4",
-      "bank": "ㅇㄴㅁㄻㄴㅇ",
-      "accountNumber": "123123-21-321",
-      "balance": 0
-    },
-    {
-      "id": "5",
-      "bank": "ㅁㄴㅇㄻㄴㅇㄹ",
-      "accountNumber": "123213-21-312323",
-      "balance": 0
-    },
-    {
-      "id": "Fri Apr 11 2025 09:46:22 GMT+0900 (한국 표준시)",
-      "bank": "ㅁㄴㅇㄹ",
-      "accountNumber": "123123-12-312332",
-      "balance": 0
     }
   ],
   "user_ledgers": [
@@ -203,36 +185,6 @@
       "id": "3",
       "userId": "2",
       "accountId": "2"
-    },
-    {
-      "id": "5",
-      "userId": "1",
-      "accountId": null
-    },
-    {
-      "id": "5",
-      "userId": "1",
-      "accountId": null
-    },
-    {
-      "id": "6",
-      "userId": "1",
-      "accountId": null
-    },
-    {
-      "id": "7",
-      "userId": "1",
-      "accountId": null
-    },
-    {
-      "id": "8",
-      "userId": "1",
-      "accountId": null
-    },
-    {
-      "id": "Fri Apr 11 2025 09:46:22 GMT+0900 (한국 표준시)",
-      "userId": "1",
-      "accountId": "Fri Apr 11 2025 09:46:22 GMT+0900 (한국 표준시)"
     }
   ],
   "entries": [
