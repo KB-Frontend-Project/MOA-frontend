@@ -119,7 +119,9 @@ const closetrigger = () => {
 //-------------------------------------------------------------------
 const ledgerName = ref('')
 const ledgerDesc = ref('')
-const userList = reactive({ datas: [localStorage.getItem('email')] })
+
+const userList = reactive({ datas: [JSON.parse(localStorage.getItem('moa-user')).email] })
+
 const newUser = ref('')
 const addUserList = () => {
   userList.datas.push(newUser.value)
