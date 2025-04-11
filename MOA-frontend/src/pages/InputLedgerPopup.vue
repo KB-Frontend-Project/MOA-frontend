@@ -149,7 +149,7 @@ const today = computed(() => {
   return `${year}-${month}-${day}`
 })
 
-const inputList = reactive({
+let inputList = reactive({
   ledgerId: '0',
   isWithDraw: true,
   when: today.value,
