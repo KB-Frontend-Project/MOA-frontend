@@ -372,6 +372,19 @@ export const useMoaStore = defineStore('moa', () => {
     return myAccountList
   })
 
+  const getMyEntryList = computed(() => {
+    const myLedgerIdList = states.userLedgerList
+      .filter(item => {
+        if (item.userId === user.value.id) {
+          return item.ledgerId
+        }
+      })
+      .map(item => item.ledgerId)
+
+    const myEntryList = states.entrieList.filter(ledger => myLedgerIdList.includes(ledger.ledgerId))
+    return myEntryList
+  })
+
   return {
     user,
     isLoading,
@@ -396,6 +409,7 @@ export const useMoaStore = defineStore('moa', () => {
     putUserBalance,
     postUserAccount,
     deleteUserAccount,
+    getMyEntryList,
     getMyAccountList,
     getMyLedgerList,
     user,

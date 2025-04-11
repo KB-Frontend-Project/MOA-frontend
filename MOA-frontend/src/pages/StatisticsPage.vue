@@ -1,5 +1,5 @@
 <template>
-  <div :class="['chart-page-container', { 'darkmode': isDarkMode}]">
+  <div :class="['chart-page-container', { darkmode: isDarkMode }]">
     <div class="line-chart-container">
       <LineChart
         :key="isDarkMode"
@@ -378,12 +378,12 @@ const updateCategoryData = () => {
   pieDataCategory.value.datasets[0].data = Object.values(getCategorySpending.value)
 }
 
-const applyChartColors = (isDark) => {
+const applyChartColors = isDark => {
   const textColor = isDark ? '#eee' : '#666'
   const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'
   const tooltipTextColor = isDark ? '#eee' : '#fff'
 
-  const updateColors = (optionsRef) => {
+  const updateColors = optionsRef => {
     if (optionsRef.value.scales?.x?.ticks) {
       optionsRef.value.scales.x.ticks.color = textColor
       optionsRef.value.scales.x.grid.color = gridColor
@@ -422,13 +422,10 @@ onMounted(async () => {
   isReady.value = true
 })
 
-
-watch(isDarkMode, async (newVal) => {
-  await nextTick()  // ✅ 렌더 이후 안전하게 반영
+watch(isDarkMode, async newVal => {
+  await nextTick() // ✅ 렌더 이후 안전하게 반영
   applyChartColors(newVal)
 })
-
-
 </script>
 <style scoped>
 .chart-page-container {
@@ -460,5 +457,4 @@ watch(isDarkMode, async (newVal) => {
 }
 
 /* Chart.js 내부 스타일은 차트 옵션에서 직접 설정해야 함 */
-
 </style>

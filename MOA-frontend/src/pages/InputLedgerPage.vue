@@ -1,5 +1,5 @@
 <template>
-  <div :class="['input-page-container', { 'darkmode' : isDarkMode}]">
+  <div :class="['input-page-container', { darkmode: isDarkMode }]">
     <div class="ledger-select-container">
       <BaseButton
         v-for="ledger in getMyLedgerList"
@@ -85,7 +85,7 @@ import { computed, onMounted, ref } from 'vue'
 const moaStore = useMoaStore()
 const moaStoreForInput = useMoaStoreForInput()
 const { fetchLedgerInput } = moaStoreForInput
-const { categoryWithdraw, categoryIncome, fetchLedgerList, fetchUserLedgerList } = moaStore
+const { categoryWithdraw, categoryIncome } = moaStore
 const getMyLedgerList = computed(() => moaStore.getMyLedgerList)
 const isDarkMode = computed(() => moaStore.isDarkMode)
 
@@ -164,12 +164,6 @@ const isDataFullfiled = computed(() => {
       acc & (cur.where.length !== 0) & (cur.category.length !== 0) & (cur.desc.length !== 0),
     true
   )
-})
-
-onMounted(async () => {
-  await fetchLedgerList()
-  await fetchUserLedgerList()
-  console.log(getMyLedgerList.value)
 })
 </script>
 
@@ -289,5 +283,4 @@ select {
 .input-page-container.darkmode .delete-button-container {
   color: #a0eac0;
 }
-
 </style>
