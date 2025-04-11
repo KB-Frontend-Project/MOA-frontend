@@ -34,7 +34,7 @@
             _h="1.5rem"
           />
           <BaseButton
-            @click="unlinkAccount(idx)"
+            @click="unlinkAccount(account.id)"
             _text="연동 해지"
             _type=""
             _w="4.5rem"
@@ -89,8 +89,14 @@ import { useMoaStore } from '@/stores/moaStore.js'
 
 const moaStore = useMoaStore()
 
-const { fetchAccountList, fetchUserAccountList, postUserAccount, postUserAccountId, user } =
-  moaStore
+const {
+  fetchAccountList,
+  fetchUserAccountList,
+  postUserAccount,
+  postUserAccountId,
+  deleteUserAccount,
+  user,
+} = moaStore
 const getMyAccountList = computed(() => moaStore.getMyAccountList)
 
 const selectedAccount = ref({})
@@ -123,8 +129,10 @@ const addAccount = async () => {
   }
 }
 
-const unlinkAccount = idx => {
-  accounts.value.splice(idx, 1)
+const unlinkAccount = async idx => {
+  if (confirm('삭제하시겠습니까?')) {
+    await deleteUserAccount(idx)
+  }
 }
 
 const cancelAdd = () => {

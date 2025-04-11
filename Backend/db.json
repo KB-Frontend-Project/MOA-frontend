@@ -8,7 +8,7 @@
       "image": "profile1.jpg",
       "createdAt": "2023-01-15",
       "alert": true,
-      "shake_unit": 5,
+      "shake_unit": 10,
       "balance": 91172
     },
     {
@@ -103,7 +103,7 @@
     {
       "id": "4",
       "bank": "국민은행",
-      "accountNumber": "123123-12-321323",
+      "accountNumber": "123123-21-312312",
       "balance": 0
     }
   ],
@@ -146,9 +146,9 @@
       "accountId": "2"
     },
     {
-      "id": "4",
-      "userId": "2",
-      "accountId": "3"
+      "id": "5",
+      "userId": "1",
+      "accountId": null
     },
     {
       "id": "5",

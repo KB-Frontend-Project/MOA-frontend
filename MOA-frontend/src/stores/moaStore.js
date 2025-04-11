@@ -15,7 +15,6 @@ export const useMoaStore = defineStore('moa', () => {
     userAccountList: [],
     accountList: [],
   })
-  const isDarkMode = ref(false)
 
   //테스트용 더미
   const user = ref({
@@ -37,7 +36,7 @@ export const useMoaStore = defineStore('moa', () => {
   const ACCOUNT_URL = '/api/accounts'
   const USER_ACCOUNT_URL = '/api/user_accounts'
   const isDarkMode = ref(false)
-  
+
   function toggleDarkMode() {
     isDarkMode.value = !isDarkMode.value
     localStorage.setItem('darkMode', isDarkMode.value)
@@ -201,6 +200,21 @@ export const useMoaStore = defineStore('moa', () => {
     } catch (err) {
       console.error(err)
       return false
+    }
+  }
+
+  const deleteUserAccount = async (id, successCallback = () => {}) => {
+    try {
+      const [accountResponse, userAccountResponse] = await Promise.all([
+        axios.delete(`${ACCOUNT_URL}/${id}`),
+        axios.delete(`${USER_ACCOUNT_URL}/${id}`),
+      ])
+      if (accountResponse.status === 200 && userAccountResponse.status === 200) {
+        console.log('response 200')
+        successCallback()
+      }
+    } catch (error) {
+      console.error('deleteUserAccount Error', error)
     }
   }
 
@@ -385,6 +399,7 @@ export const useMoaStore = defineStore('moa', () => {
     putCurrentAccount,
     putUserBalance,
     postUserAccount,
+    deleteUserAccount,
     getMyAccountList,
     getMyLedgerList,
     user,
