@@ -1,24 +1,34 @@
 <template>
-  <div><Bar :data="chartData" :options="chartOptions" /></div>
+  <Bar ref="chartRef" :data="chartData" :options="chartOptions" />
 </template>
 
 <script setup>
 import { Bar } from 'vue-chartjs'
-
 import {
   Chart as ChartJS,
   Title,
   Tooltip,
   Legend,
-  CategoryScale, // x축 (카테고리용)
-  LinearScale, // y축 (숫자용)
-  BarElement, // 막대 (Bar) 그리는 요소
+  CategoryScale,
+  LinearScale,
+  BarElement,
 } from 'chart.js'
+import { ref, watch, toRef } from 'vue'
 
 ChartJS.register(Title, Tooltip, Legend, CategoryScale, LinearScale, BarElement)
 
-defineProps({
+const props = defineProps({
   chartData: Object,
   chartOptions: Object,
 })
+
+const chartRef = ref(null)
+const chartOptions = toRef(props, 'chartOptions')
+
+watch(chartOptions, () => {
+  if (chartRef.value?.chartInstance) {
+    chartRef.value.chartInstance.options = chartOptions.value
+    chartRef.value.chartInstance.update()
+  }
+}, { deep: true })
 </script>

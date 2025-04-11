@@ -1,36 +1,43 @@
 <template>
-  <div class="chart-page-container">
+  <div :class="['chart-page-container', { 'darkmode': isDarkMode}]">
     <div class="line-chart-container">
-      <LineChart v-if="isReady" :chartData="lineDataMonthly" :chartOptions="optionsLine" />
+      <LineChart
+        :key="isDarkMode"
+        v-if="isReady"
+        :chartData="lineDataMonthly"
+        :chartOptions="optionsLine"
+      />
     </div>
     <div class="bar-chart-container">
       <BarChart
+        :key="isDarkMode"
         v-if="isReady"
         :chartData="barDataWeekly"
         :chartOptions="optionsBar"
-        style="height: 100%"
       />
     </div>
     <div class="pie-chart-container">
       <PieChart
+        :key="isDarkMode"
         v-if="isReady"
         :chartData="pieDataCategory"
         :chartOptions="optionsPie"
-        style="height: 100%"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, nextTick } from 'vue'
 import LineChart from '@/components/statistics/LineGraph.vue'
 import { useMoaStore } from '@/stores/moaStore'
 import BarChart from '@/components/statistics/BarChart.vue'
 import PieChart from '@/components/statistics/PieChart.vue'
+import { watch } from 'vue'
 
 const moaStore = useMoaStore()
 const { fetchEntrieList } = moaStore
+const isDarkMode = computed(() => moaStore.isDarkMode)
 const getMonthlySpending = computed(() => moaStore.getMonthlySpending)
 const getWeeklySpending = computed(() => moaStore.getWeeklySpending)
 const getCategorySpending = computed(() => moaStore.getCategorySpending)
@@ -371,15 +378,57 @@ const updateCategoryData = () => {
   pieDataCategory.value.datasets[0].data = Object.values(getCategorySpending.value)
 }
 
+const applyChartColors = (isDark) => {
+  const textColor = isDark ? '#eee' : '#666'
+  const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'
+  const tooltipTextColor = isDark ? '#eee' : '#fff'
+
+  const updateColors = (optionsRef) => {
+    if (optionsRef.value.scales?.x?.ticks) {
+      optionsRef.value.scales.x.ticks.color = textColor
+      optionsRef.value.scales.x.grid.color = gridColor
+    }
+    if (optionsRef.value.scales?.y?.ticks) {
+      optionsRef.value.scales.y.ticks.color = textColor
+      optionsRef.value.scales.y.grid.color = gridColor
+    }
+
+    if (optionsRef.value.plugins?.legend?.labels) {
+      optionsRef.value.plugins.legend.labels.color = textColor
+    }
+
+    if (optionsRef.value.plugins?.title) {
+      optionsRef.value.plugins.title.color = textColor
+    }
+
+    if (optionsRef.value.plugins?.tooltip) {
+      optionsRef.value.plugins.tooltip.titleColor = tooltipTextColor
+      optionsRef.value.plugins.tooltip.bodyColor = tooltipTextColor
+    }
+  }
+
+  updateColors(optionsLine)
+  updateColors(optionsBar)
+  updateColors(optionsPie)
+}
+
 onMounted(async () => {
   await fetchEntrieList()
-  console.log(getMonthlySpending.value)
   updateMonthlyData()
   updateWeeklyData()
   updateCategoryData()
-  console.log('data:', pieDataCategory.value)
+
+  applyChartColors(isDarkMode.value)
   isReady.value = true
 })
+
+
+watch(isDarkMode, async (newVal) => {
+  await nextTick()  // ✅ 렌더 이후 안전하게 반영
+  applyChartColors(newVal)
+})
+
+
 </script>
 <style scoped>
 .chart-page-container {
@@ -398,4 +447,18 @@ onMounted(async () => {
 .pie-chart-container {
   grid-column: 7 / -1;
 }
+
+.chart-page-container.darkmode {
+  background-color: #1e1e1e;
+  color: #eee;
+}
+
+.chart-page-container.darkmode .line-chart-container,
+.chart-page-container.darkmode .bar-chart-container,
+.chart-page-container.darkmode .pie-chart-container {
+  background-color: #1e1e1e;
+}
+
+/* Chart.js 내부 스타일은 차트 옵션에서 직접 설정해야 함 */
+
 </style>
