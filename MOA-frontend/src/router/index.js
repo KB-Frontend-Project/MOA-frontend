@@ -9,6 +9,7 @@ import CalendarPage from '@/pages/CalendarPage.vue'
 import InputLedgerPage from '@/pages/InputLedgerPage.vue'
 import ResetPasswordPage from '@/pages/ResetPasswordPage.vue'
 import AccountLinking from '@/pages/AccountLinking.vue'
+import LogoutPage from '@/pages/LogoutPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,6 +30,12 @@ const router = createRouter({
       path: '/signup',
       name: 'signup',
       component: SignUpPage,
+      meta: { guest: true, noSideBar: true },
+    },
+    {
+      path: '/logout',
+      name: 'logout',
+      component: LogoutPage,
       meta: { guest: true, noSideBar: true },
     },
     {
