@@ -219,28 +219,20 @@ export const useMoaStore = defineStore('moa', () => {
   }
 
   const postUserAccount = async (account, successCallback = () => {}) => {
+    const newId = new Date().toString()
     try {
-      const response = await axios.post(`${ACCOUNT_URL}`, {
-        ...account,
-        id: (states.accountList.length + 1).toString(),
-      })
-      if (response.status === 201) {
-        console.log('response 201')
-        successCallback()
-      }
-    } catch (error) {
-      console.error('putCurrentAccount Error', error)
-    }
-  }
-
-  const postUserAccountId = async (successCallback = () => {}) => {
-    try {
-      const response = await axios.post(`${USER_ACCOUNT_URL}`, {
-        id: (states.userAccountList.length + 1).toString(),
-        userId: user.value.id,
-        accountId: (states.accountList.length + 1).toString(),
-      })
-      if (response.status === 201) {
+      const [accountResponse, userAccountResponse] = await Promise.all([
+        axios.post(`${ACCOUNT_URL}`, {
+          ...account,
+          id: newId,
+        }),
+        axios.post(`${USER_ACCOUNT_URL}`, {
+          id: newId,
+          userId: user.value.id,
+          accountId: newId,
+        }),
+      ])
+      if (accountResponse.status === 201 && userAccountResponse.status === 201) {
         console.log('response 201')
         successCallback()
       }
@@ -391,7 +383,6 @@ export const useMoaStore = defineStore('moa', () => {
     fetchUserLedgerList,
     fetchUserAccountList,
     loadUserFromLocalStorage,
-    postUserAccountId,
     logout,
     updateUser,
     deleteUser,
