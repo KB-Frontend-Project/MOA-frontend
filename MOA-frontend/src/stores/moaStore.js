@@ -294,7 +294,7 @@ export const useMoaStore = defineStore('moa', () => {
   }
 
   const getMyLedgerList = computed(() => {
-    // const user = { id: 1 }
+    //const user = { id: 1 }
     //임시 데이터!!! 나중에 user.id -> user.value.id로 수정
     const myLedgerIdList = states.userLedgerList
       .filter(item => {
@@ -332,10 +332,9 @@ export const useMoaStore = defineStore('moa', () => {
     return sortedMonthlySpending
   })
 
-  const getWeeklySpending = computed(() => {
+  const getWeeklySpending = targetMonth => {
     const weeklySpending = []
     const today = new Date()
-    const month = today.getMonth() + 1
     const year = today.getFullYear()
 
     for (let i = 0; i < 4; i++) {
@@ -344,13 +343,14 @@ export const useMoaStore = defineStore('moa', () => {
         income: 0,
       })
     }
+
     states.entrieList.forEach(entry => {
       const entryDate = new Date(entry.when)
       const entryDay = entryDate.getDate()
       const entryMonth = entryDate.getMonth() + 1
       const entryYear = entryDate.getFullYear()
 
-      if (entryMonth === month && entryYear === year) {
+      if (entryMonth === targetMonth && entryYear === year) {
         let index = Math.min(3, Math.floor((entryDay - 1) / 7))
 
         if (entry.isWithDraw) {
@@ -360,8 +360,9 @@ export const useMoaStore = defineStore('moa', () => {
         }
       }
     })
+
     return weeklySpending
-  })
+  }
 
   const getCategorySpending = computed(() => {
     const categorySpending = { 식비: 0, 교통: 0, 쇼핑: 0, 문화: 0 }
