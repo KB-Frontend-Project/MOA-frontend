@@ -11,31 +11,38 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { computed } from 'vue'
-import BaseModal from './components/common/BaseModal.vue'
+import { computed, onMounted } from 'vue'
 import SideBar from './components/layout/SideBar.vue'
 import Header from './components/layout/Header.vue'
-import SignUpPage from './pages/SignUpPage.vue'
-import ProfileSettingPage from './pages/ProfileSettingPage.vue'
-import LoginPage from './pages/LoginPage.vue'
-import HomePage from './pages/HomePage.vue'
-import ResetPasswordPage from './pages/ResetPasswordPage.vue'
 import { useMoaStore } from '@/stores/moaStore'
 
 const route = useRoute()
 const store = useMoaStore()
-const isModalOpen = ref(false)
 const noHeader = computed(() => route.meta.noHeader)
 const noSideBar = computed(() => route.meta.noSideBar)
 const isDarkMode = computed(() => store.isDarkMode)
-const toggleModal = () => {
-  isModalOpen.value = !isModalOpen.value
+const {
+  fetchAccountList,
+  fetchEntrieList,
+  fetchLedgerList,
+  fetchUserAccountList,
+  fetchUserLedgerList,
+} = useMoaStore()
+
+const fetchAllData = async () => {
+  await Promise.all([
+    fetchAccountList(),
+    fetchEntrieList(),
+    fetchLedgerList(),
+    fetchUserAccountList(),
+    fetchUserLedgerList(),
+  ])
 }
 
-onMounted(() => {
+onMounted(async () => {
   store.initDarkMode()
+  await fetchAllData()
 })
 </script>
 
