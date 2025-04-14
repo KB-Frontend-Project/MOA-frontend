@@ -7,11 +7,14 @@
         _isActive="true"
         :_w="(ul.name + ' 가계부').length.toString()"
         _h="3"
-        :_text="ul.name + ' 가계부'"
         _textSize="1"
+        :_text="ul.name + ' 가계부'"
         :_type="isSelected[ul.ledgerId.toString()] ? 'fill' : 'borderline'"
         _mp="me-1"
         @click="ledgerClicked(ul.ledgerId, ul.name)"
+        :class="{
+          'ledger-select-button': true,
+        }"
       />
     </div>
     <br />
@@ -105,6 +108,15 @@ select option:checked {
 
 div.ledgerDetailDiv {
   /* background-color: pink; */
+}
+
+.ledget-select-button {
+  .ledger-select-button {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 3rem;
+    margin: 0 0.3rem;
+  }
 }
 
 @media screen and (min-width: 1801px) {

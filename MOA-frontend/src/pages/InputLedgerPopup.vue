@@ -86,7 +86,7 @@ import axios from 'axios'
 import { useMoaStore } from '@/stores/moaStore.js'
 
 const moaStore = useMoaStore()
-const { fetchLedgerInput, fetchLedgerList } = moaStore
+const { postLedgerInput, fetchLedgerList } = moaStore
 
 const BASEURI = '/api/ledgers'
 const states = reactive({ ledgerList: [] })
@@ -172,7 +172,7 @@ const isDataFullfiled = computed(() => {
 
 const handleLedgerInput = async () => {
   try {
-    await fetchLedgerInput(inputList)
+    await postLedgerInput(inputList)
     await fetchLedgerList()
     alert('작성이 완료되었습니다!')
     resetLedgerInput()

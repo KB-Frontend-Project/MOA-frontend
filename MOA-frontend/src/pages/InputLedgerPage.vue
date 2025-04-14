@@ -83,7 +83,7 @@ import { useMoaStore } from '@/stores/moaStore.js'
 import { computed, ref } from 'vue'
 
 const moaStore = useMoaStore()
-const { categoryWithdraw, categoryIncome, fetchLedgerInput, fetchLedgerList } = moaStore
+const { categoryWithdraw, categoryIncome, postLedgerInput, fetchLedgerList } = moaStore
 const getMyLedgerList = computed(() => moaStore.getMyLedgerList)
 const isDarkMode = computed(() => moaStore.isDarkMode)
 
@@ -116,7 +116,7 @@ const handleSelectedLedger = id => {
 
 const handleLedgerInput = async () => {
   try {
-    await Promise.all(inputList.value.map(data => fetchLedgerInput(data)))
+    await Promise.all(inputList.value.map(data => postLedgerInput(data)))
     await fetchLedgerList()
     alert('작성이 완료되었습니다!')
     resetLedgerInput()

@@ -49,6 +49,10 @@ export const useMoaStore = defineStore('moa', () => {
     if (stored !== null) isDarkMode.value = stored === 'true'
   }
 
+  //////////////
+  //entrie API//
+  //////////////
+
   const fetchEntrieList = async () => {
     try {
       const response = await axios.get(ENTRIES_URL)
@@ -85,6 +89,32 @@ export const useMoaStore = defineStore('moa', () => {
     }
   }
 
+  const fetchUserLedgerList = async () => {
+    try {
+      const res = await axios.get(USER_LEDGERS_URL)
+      if (res.status === 200) {
+        states.userLedgerList = res.data
+        console.log('userLedgerList:', states.userLedgerList)
+      }
+    } catch (err) {
+      console.error('fetchUserLedgerList 에러:', err)
+    }
+  }
+
+  const postLedgerInput = async (data, successCallback = () => {}) => {
+    try {
+      const response = await axios.post(ENTRIES_URL, { ...data, author: user.value.name })
+      if (response.status === 201) {
+        successCallback()
+      } else {
+        console.error('status not 201')
+      }
+    } catch (error) {
+      console.error('fetchLegerInput error', error)
+    }
+  }
+  //////////////////////////////////////////////////////////////////////
+
   const fetchUserList = async () => {
     try {
       const res = await axios.get(USERS_URL)
@@ -109,18 +139,6 @@ export const useMoaStore = defineStore('moa', () => {
     }
   }
 
-  const fetchUserLedgerList = async () => {
-    try {
-      const res = await axios.get(USER_LEDGERS_URL)
-      if (res.status === 200) {
-        states.userLedgerList = res.data
-        console.log('userLedgerList:', states.userLedgerList)
-      }
-    } catch (err) {
-      console.error('fetchUserLedgerList 에러:', err)
-    }
-  }
-
   const fetchUserAccountList = async () => {
     try {
       const res = await axios.get(USER_ACCOUNT_URL)
@@ -130,19 +148,6 @@ export const useMoaStore = defineStore('moa', () => {
       }
     } catch (err) {
       console.error('fetchUserLedgerList 에러:', err)
-    }
-  }
-
-  const fetchLedgerInput = async (data, successCallback = () => {}) => {
-    try {
-      const response = await axios.post(ENTRIES_URL, { ...data, author: user.value.name })
-      if (response.status === 201) {
-        successCallback()
-      } else {
-        console.error('status not 201')
-      }
-    } catch (error) {
-      console.error('fetchLegerInput error', error)
     }
   }
 
@@ -429,7 +434,7 @@ export const useMoaStore = defineStore('moa', () => {
     putUserBalance,
     postUserAccount,
     deleteUserAccount,
-    fetchLedgerInput,
+    postLedgerInput,
     getMyEntryList,
     getMyAccountList,
     getMyLedgerList,

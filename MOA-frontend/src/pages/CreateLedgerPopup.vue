@@ -142,7 +142,12 @@ const createLedgerHandler = async () => {
       userId: userID.toString(),
       ledgerId: ledId.toString(),
     }
-    await axios.post('/api/user_ledgers', result)
+    const response = await axios.post('/api/user_ledgers', result)
+    if (response.status === 201) {
+      alert('작성이 완료되었습니다.')
+    } else {
+      console.log(response.status)
+    }
   }
 }
 
@@ -169,7 +174,10 @@ const createLedger = async () => {
     desc: ledgerDesc.value,
   }
 
-  await axios.post('/api/ledgers', result)
+  const response = await axios.post('/api/ledgers', result)
+  if (response.status === 201) {
+    console.log('status 201')
+  }
   return result.id
 }
 //-------------------------------------------------------------------
